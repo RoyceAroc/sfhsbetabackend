@@ -49,7 +49,7 @@ const sheets = google.sheets({
 });
 
 /** Deployment process */
-var testing = true; // Set to false if deploying
+var testing =false; // Set to false if deploying
 if(testing) {
     var serverLink = 'http://localhost:3000';
     var redirectLink = 'http://localhost:5501';
