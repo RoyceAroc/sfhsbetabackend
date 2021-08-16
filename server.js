@@ -54,7 +54,7 @@ if(testing) {
     var serverLink = 'http://localhost:3000';
     var redirectLink = 'http://localhost:5501';
 } else {
-    var serverLink = 'https://server.sfhsbeta.com';
+    var serverLink = 'https://sfhsbeta.herokuapp.com/';
     var redirectLink = 'https://sfhsbeta.com';
 }
 
@@ -102,7 +102,7 @@ function urlGoogle() {
     const url = getConnectionUrl(auth);
     console.log(url);
 }
-
+urlGoogle();
 async function getAccessTokenFromCode(code) {
     const {
         data
