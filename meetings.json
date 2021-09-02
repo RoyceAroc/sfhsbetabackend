@@ -1,16 +1,39 @@
 [
     {
-        "type": "september",
-        "start": "2021-02-20",
-        "end": "2021-07-20",
-        "video_url": "",
-        "slideshow_url": "https://docs.google.com/presentation/d/e/2PACX-1vSoWXS5DXYTP_DVW_s12OmR80QfeISZsDK4B1jrINiWEp36_BzqwW6MChKZS59-i_w5K7MdUuekiuU2/embed?start=false&loop=false&delayms=3000"
-    },
-    {
-        "type": "october",
-        "start": "2021-08-09",
-        "end": "2021-09-20",
-        "video_url": "",
-        "slideshow_url": "https://docs.google.com/presentation/d/e/2PACX-1vSoWXS5DXYTP_DVW_s12OmR80QfeISZsDK4B1jrINiWEp36_BzqwW6MChKZS59-i_w5K7MdUuekiuU2/embed?start=false&loop=false&delayms=3000"
+        "init": 0,
+        "type": "September",
+        "start": "2021-09-1",
+        "end": "2021-09-10",
+        "questions": [
+            {
+                "question": "How many hours are you required to complete this semester?",
+                "time": 157,
+                "optionA": "5 hours",
+                "optionB": "7 hours",
+                "optionC": "10 hours",
+                "optionD": "15 hours",
+                "answer": 2
+            },
+            {
+                "question": "Which of the following is NOT true about the Breast Cancer Chemo Kit Drive?",
+                "time": 476,
+                "optionA": "Maximum of two service hours",
+                "optionB": "One bag is equal to one service hour",
+                "optionC": "Drive will be held from September 7 - October 21",
+                "optionD": "Proof of donation must be submitted on the Non-Signature Service Project form",
+                "answer": 1
+            },
+            {
+                "question": "If you have any questions or concerns, what platform(s) can you use to react out to us?",
+                "time": 831,
+                "optionA": "Remind101",
+                "optionB": "Email (sfhsbeta@gmail.com)",
+                "optionC": "Instagram (@sfhsbeta)",
+                "optionD": "All of the above",
+                "answer": 4
+            }
+        ],
+        "video_url": "https://d1drabmetuo3qr.cloudfront.net/fN2M3NjY0ZDZiNTgwNTVmMjgzNTFjZWM4ZjM2NDcwY2I.highres.mp4?Expires=1630598379&Signature=d5FsTf21ocO90u9gO46DijSRX0QdSvqY6aX6RClTpDo87lNAF8oXZrtNbrTWUQmqZKU~iFt2grpYeb-Gvdn1g~8jcy6I-VDfx-9~yp80fBhFiiXI8KXfPBg1uM3QC8jaDSnrM9U2rmWyLuchHvALVHvidlZqfl0kPu5jd2Y8nbSnzcweG3iWqWN9k5Xc03sYIHerqfInZo37q5mmYV3jICBA51oNlWmFAxJfbBYVqyH8V4ijtPuOe2BvXcE8~H~Pcg1tCJwBVFzlFeJifI~Rb-sEcDX1EeMPhQBfofEmqSaCJDE9eK5DJSFjlOACBvLHOicg5~9MhqXwnsZTUMD02Q__&Key-Pair-Id=APKAI62FB7DDTEKY56BA",
+        "slideshow_url": "https://docs.google.com/presentation/d/1DIRkIY9fV661gXTFEUvPg2KEMWt_Ux9pEBno7a_TkjE/edit?usp=sharing"
     }
 ]

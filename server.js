@@ -103,6 +103,7 @@ function urlGoogle() {
     console.log(url);
 }
 
+
 async function getAccessTokenFromCode(code) {
     const {
         data
@@ -195,12 +196,15 @@ async function checkAttendanceStatus(id, num) {
         for (let i = 0; i < 3; ++i) {
             try {
                 for (let j = 0; j < data.sheets[i].properties.gridProperties.rowCount; ++j) {
-                    let user_id = data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.numberValue;
+                    let user_id = data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.stringValue;
                     if (user_id == id) {
-                        if(data.sheets[i].data[0].rowData[j].values[num].userEnteredFormat.backgroundColor.red) {
+                        if(data.sheets[i].data[0].rowData[j].values[num].userEnteredFormat.backgroundColor.red == 1 && !data.sheets[i].data[0].rowData[j].values[num].userEnteredFormat.backgroundColor.green) {
+                            return true;
+                        } else if (data.sheets[i].data[0].rowData[j].values[num].userEnteredFormat.backgroundColor.red == 1 && data.sheets[i].data[0].rowData[j].values[num].userEnteredFormat.backgroundColor.green == 0.6) {   
                             return false;
+                        } else {
+                            return true;
                         }
-                        return true;
                     }
                 }
             } catch (e) {}
@@ -256,7 +260,6 @@ app.post('/admin-data', function(req, res) {
     })
 })
 
-
 /* Populating Member Setup */
 app.post('/member-setup', async function(req, res) {
     req.on('data', async function(data) {
@@ -290,24 +293,27 @@ app.post('/member-setup', async function(req, res) {
                         });
                     }
                 }
-                res.send(export_data);
             }
         });
-        /* Attendance Data
+
         const meeting_data = JSON.parse(fs.readFileSync('meetings.json', 'utf8'));
         for(let i=0; i<meeting_data.length; i++) {
             if(new Date(meeting_data[i].end) <= new Date()) {
                 export_data.attendance.past_attendance.push({
                     "type": meeting_data[i].type,
+                    "init": meeting_data[i].init,
+                    "questions": meeting_data[i].questions,
                     "completed": await checkAttendanceStatus(user_id, i+3),
                     "start": meeting_data[i].start,
                     "end": meeting_data[i].end,
                     "video_url": meeting_data[i].video_url,
                     "slideshow_url": meeting_data[i].slideshow_url,
                 });
-            } else if(new Date(meeting_data[i].start) >= new Date()) {
+            } else if(new Date(meeting_data[i].start) <= new Date()) {
                 export_data.attendance.current_attendance.push({
                     "type": meeting_data[i].type,
+                    "questions": meeting_data[i].questions,
+                    "init": meeting_data[i].init,
                     "completed": await checkAttendanceStatus(user_id, i+3),
                     "start": meeting_data[i].start,
                     "end": meeting_data[i].end,
@@ -316,7 +322,8 @@ app.post('/member-setup', async function(req, res) {
                 });
             }
         }
-        */
+
+        res.send(export_data);
     })
 })
 
@@ -530,3 +537,115 @@ app.get('*', function(req, res) {
 
 app.listen(port, () => {});
 
+
+
+app.post('/checkAttendanceForMonth', async function(req, res) {
+    req.on('data', async function (data) {
+			var obj = JSON.parse(data);
+    let uid = obj.userID.toString().replace('@forsythk12.org', '');
+    let present = obj.present;
+    let init = obj.init;
+    let spreadsheetId = "1SzTrrUvB-viMYahRFTiv1RjJLzP88tvBYMI_5QMabJE";  
+    const request = {
+        spreadsheetId: "1SzTrrUvB-viMYahRFTiv1RjJLzP88tvBYMI_5QMabJE",
+        ranges: [],
+        includeGridData: true,
+    };
+    let subsheet = "0";
+    try {
+        const response = (await sheets.spreadsheets.get(request)).data;
+        let data = JSON.parse(JSON.stringify(response, null, 2));
+        for (let i = 0; i < 3; ++i) {
+            try {
+                for (let j = 0; j < data.sheets[i].properties.gridProperties.rowCount; ++j) {
+                    let user_id = data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.stringValue;
+                    if (user_id == uid) {
+                        if(i == 0) {
+                            subsheet = "0";
+                        } else if(i==1) {
+                            subsheet = "948233976";
+                        } else {
+                            subsheet = "1035860937"
+                        }   
+                        if(present) {
+                            batchUpdateRequest = {
+                                "requests": [
+                                    {
+                                        "updateCells": {
+                                        "range": {
+                                            "sheetId": subsheet,
+                                            "startRowIndex": j,
+                                            "endRowIndex": j+1,
+                                            "startColumnIndex": init+3,
+                                            "endColumnIndex": init+4
+                                        },
+                                        "rows": [
+                                            {
+                                            "values": [
+                                                {
+                                                "userEnteredFormat": {
+                                                    "backgroundColor": {
+                                                    "green": 1
+                                                    }
+                                                }
+                                                }
+                                            ]
+                                            }
+                                        ],
+                                        "fields": "userEnteredFormat.backgroundColor"
+                                        }
+                                    }
+                                ]
+                            };
+                        } else {
+                            batchUpdateRequest = {
+                                "requests": [
+                                    {
+                                        "updateCells": {
+                                        "range": {
+                                            "sheetId": subsheet,
+                                            "startRowIndex": j,
+                                            "endRowIndex": j+1,
+                                            "startColumnIndex": init+3,
+                                            "endColumnIndex": init+4
+                                        },
+                                        "rows": [
+                                            {
+                                            "values": [
+                                                {
+                                                "userEnteredFormat": {
+                                                    "backgroundColor": {
+                                                    "red": 1
+                                                    }
+                                                }
+                                                }
+                                            ]
+                                            }
+                                        ],
+                                        "fields": "userEnteredFormat.backgroundColor"
+                                        }
+                                    }
+                                ]
+                            };
+                        }
+                        
+                        sheets.spreadsheets.batchUpdate({
+                            spreadsheetId,
+                            resource: batchUpdateRequest
+                            }, (err, response) => {
+                            if (err) {
+                                res.send("Error");
+                            } else {
+                                res.send("Done");
+                            }
+                        });
+                    }
+                }
+            } catch (e) {}
+        }
+        return false;
+    } catch (err) {
+        return false;
+    }
+    });
+});
