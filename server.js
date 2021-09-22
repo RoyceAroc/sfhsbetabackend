@@ -145,7 +145,7 @@ async function checkIfCurrentMember(id, name) {
                             if(name.includes(firstName) || name.includes(lastName)) {
                                 try {
                                     let sheetID = 0;
-                                    if(i==1) {sheetID = 948233976;} else if(i==2){sheedID = 1035860937;}
+                                    if(i==1) {sheetID = 948233976;} else if(i==2){sheetID = 1035860937;}
                                         sheets.spreadsheets.batchUpdate({
                                             spreadsheetId: '1SzTrrUvB-viMYahRFTiv1RjJLzP88tvBYMI_5QMabJE',
                                             resource: {
