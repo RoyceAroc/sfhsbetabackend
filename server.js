@@ -28,6 +28,10 @@ const { triggerAsyncId } = require('async_hooks');
 const { jobs } = require('googleapis/build/src/apis/jobs');
 
 const admin = 'N$nieiu9BN@Nkjsui@JJUhBhUHijJH';
+var github = require('octonode');
+
+var client = github.client('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');
+var ghrepo = client.repo('RoyceAroc/sfhsbeta.com');
 
 /* Google drive api */
 const scopes = [
@@ -197,7 +201,7 @@ async function checkAttendanceStatus(id, num) {
             try {
                 for (let j = 0; j < data.sheets[i].properties.gridProperties.rowCount; ++j) {
                     let user_id = data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.stringValue;
-                    if (user_id == id) {
+                    if (user_id == id) {   
                         if(data.sheets[i].data[0].rowData[j].values[num].userEnteredFormat.backgroundColor.red == 1 && !data.sheets[i].data[0].rowData[j].values[num].userEnteredFormat.backgroundColor.green) {
                             return true;
                         } else if (data.sheets[i].data[0].rowData[j].values[num].userEnteredFormat.backgroundColor.red == 1 && data.sheets[i].data[0].rowData[j].values[num].userEnteredFormat.backgroundColor.green == 0.6) {   
@@ -649,3 +653,62 @@ app.post('/checkAttendanceForMonth', async function(req, res) {
     }
     });
 });
+
+try {
+    const upload = multer({
+        limits: {
+          fileSize: 4 * 1024 * 1024, // 4 MB storage
+        },
+        storage: multer.memoryStorage()
+    });
+    
+    app.post('/addVolunteeringOpportunity', upload.single('document_file'), async function(req, res) {
+        let stream = require('stream');
+        let fileObject = req.file;
+        let bufferStream = new stream.PassThrough();
+        bufferStream.end(fileObject.buffer);
+        //bufferStream
+
+        let urlA = "https://raw.githubusercontent.com/RoyceAroc/sfhsbeta.com/main/web/data/content/files/volunteeringOpportunities.json";
+
+        let settings = { method: "Get" };
+        
+        fetch(urlA, settings)
+            .then(res => res.json())
+            .then((json) => {
+                let a = json;
+                let sub = {title: req.body.title_volunteeringOP, body: req.body.description_volunteeringOP, image: a.length+".JPG", links:[]};
+                let linkString = req.body.links_volunteeringOP;
+                for(let i=0; i<(linkString.match(/<li>/g) || []).length+1; i++) {
+                    let a = linkString.indexOf("<li>");
+                    let b = linkString.indexOf("</li>");
+                    let c = linkString.substring(a,b);
+                    let d = c.indexOf("![");
+                    let e = c.indexOf("](");
+                    let f = c.substring(d+2,e); //Link Title
+                    let g = 1;
+                    for(let m=c.length; m>0; m--) {
+                        if(c[m] == ")") {
+                            g = m;
+                            break;
+                        }
+                    }
+                    let h = c.substring(e+2, g); // Link
+                    let k = {title:f, href:h};
+                    sub.links.push(k);
+                    k = {};
+                    linkString = linkString.replace(linkString.substring(a, b+5), "");
+                }
+                a.push(sub);
+                let z = (a.length)-1;
+                ghrepo.createContents('web/data/content/media/client/volunteering/' + z + '.JPG', 'Added Image for Volunteering Opportunity', fileObject.buffer, 'main', function(err, data, headers) {
+                    ghrepo.contents('web/data/content/files/volunteeringOpportunities.json', function(err, data, headers) {
+                        ghrepo.updateContents('web/data/content/files/volunteeringOpportunities.json', 'Added Volunteering Opportunity', JSON.stringify(a), data.sha, 'main',  function(err, data, headers) {
+                            res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html` + "\";</script>");
+                        });
+                        });
+                });
+
+            });
+    });
+} catch(e) {res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html?error=504` + "\";</script>");}

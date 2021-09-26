@@ -1,1 +1,251 @@
-asd
+<style>
+main {
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100vh;
+  height: -webkit-fill-available;
+  max-height: 100vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.b-example-divider {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 100vh;
+  background-color: white;
+  border: solid white;
+  border-width: 1px 0;
+  box-shadow: inset 0 .5em 1.5em white, inset 0 .125em .5em white;
+}
+
+.bi {
+  vertical-align: -.125em;
+  pointer-events: none;
+  fill: currentColor;
+}
+
+.dropdown-toggle { outline: 0; }
+
+.nav-flush .nav-link {
+  border-radius: 0;
+}
+
+.btn-toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: .25rem .5rem;
+  font-weight: 600;
+  color: white;
+  background-color: transparent;
+  border: 0;
+  outline: none;
+}
+.btn-toggle:hover,
+.btn-toggle:focus {
+  color: #f5f3f0;
+}
+
+.btn-toggle::before {
+  width: 1.25em;
+  line-height: 0;
+  content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+  transition: transform .35s ease;
+  transform-origin: .5em 50%;
+}
+
+.btn-toggle[aria-expanded="true"] {
+  color: white;
+}
+.btn-toggle[aria-expanded="true"]::before {
+  transform: rotate(90deg);
+}
+
+.btn-toggle-nav a {
+  display: inline-flex;
+  padding: .1875rem .5rem;
+  margin-top: .125rem;
+  margin-left: 1.25rem;
+  text-decoration: none;
+}
+.btn-toggle-nav a:hover,
+.btn-toggle-nav a:focus {
+  color: #f5f3f0!important;
+}
+
+.scrollarea {
+  overflow-y: auto;
+}
+
+.fw-semibold { font-weight: 600; }
+.lh-tight { line-height: 1.25; }
+
+.section-admin {
+  display: none;
+}
+</style>
+<div id="createVoluOP" style="display: none;border:3px solid black; padding: 50px;z-index: 10000; background-color: white; width: 90%; height: 90%; position: fixed; left: 5%; top: 5%; overflow-y: auto; height: 90%;">
+  <form id="volOPS" onsubmit="return validateVolunteeringOpportunity()" enctype="multipart/form-data" method="post" class="lead">
+   <h1 style="text-align: center;"> Add Volunteering Opportunity</h1>
+   <a style="text-align: center;" href="javascript:closeCreateVolunteeringOpportunity()">Close this modal</a>
+    <div class="mb-3">
+        <label for="description_nonsignature" class="form-label lead">Title of Volunteering Opportunity <span style="color: red;">*</span> </label>
+        <textarea name="title_volunteeringOP" style="resize: none;margin-top: 5px;" class="form-control lead" id="title_volunteeringOP" rows="1"></textarea>
+    </div>
+    <textarea id="d_d" name="description_volunteeringOP" style="resize: none;margin-top: 5px;display: none;" class="form-control lead" rows="1"></textarea>
+    <textarea id="l_l" name="links_volunteeringOP" style="resize: none;margin-top: 5px;display: none;" class="form-control lead"  rows="1"></textarea>
+    <div class="mb-3">
+      <label for="description_nonsignature" class="form-label lead">Description of Volunteering Opportunity <span style="color: red;">*</span> </label>
+      <section id="description_volunteeringOP" style="border: 1px solid rgb(224, 221, 221); border-radius: 3px;padding: 10px;" id="textarea" contenteditable="true">
+        Sample text
+        <ul>
+            <li>Sample bullet point </li>
+        </ul>
+        </section>
+   </div>
+   <div class="mb-3">
+    <label for="description_nonsignature" class="form-label lead">Link Buttons <span style="color: red;">*</span> </label>
+    <section id="links_volunteeringOP" style="border: 1px solid rgb(224, 221, 221); border-radius: 3px;padding: 10px;" id="textarea" contenteditable="true">
+      <ul>
+          <li>![Link Title here](Link to resource here) </li>
+      </ul>
+      </section>
+ </div>
+    <div class="container">
+        <div class="col file-upload">
+            <div class="image-upload-wrap">
+            <input id="document_file" name="document_file" class="file-upload-input" type='file' onchange="readURL(this);" accept=".jpg" />
+            <div class="drag-text">
+                <h3 class='lead'>Upload Image (.jpg ONLY)</h3>
+            </div>
+            </div>
+            <div class="file-upload-content">
+            <img  id="uploaded_img" class="file-upload-image" src="#" alt="your image"></img>
+            <div class="image-title-wrap">
+                <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 10px;">
+        <button class="btn btn-lg px-4 me-sm-3" style="background-color:#FFD700">Add Volunteering Opportunity to Website</button>
+    </div>
+</form>
+</div>
+<div style=" left: 300px; position: fixed; overflow-y:auto; padding: 20px; height: 90vh;"> 
+  <section class="section-admin lead" style="display: block;" id="0-section">
+    <h1>Volunteering Opportunities</h1> 
+    <hr></hr>
+    <a href="javascript:showCreateVolunteeringOpportunity()">Click here to create a volunteering opportunity!</a>
+    <br><br>
+    <h3>Edit Volunteering Opportunities (Feature Coming Soon - Contact Royce to change anything until the feature is available)</h3>
+    <!--<div  class="container">
+      <div class="row">
+        <div class="card" style="width: 18rem; margin:20px">
+          <img class="card-img-top" src="web/data/content/media/client/volunteering/1.JPG" style=" object-fit: cover; height: 200px;" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">South Strong Dental Drive</h5>
+            <h6 class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Edit</a>
+          </div>
+        </div>
+        <div class="card" style="width: 18rem; margin:20px">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card" style="width: 18rem; margin:20px">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card" style="width: 18rem; margin:20px">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card" style="width: 18rem; margin:20px">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card" style="width: 18rem; margin:20px">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card" style="width: 18rem; margin:20px">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card" style="width: 18rem; margin:20px">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+      </div>
+    </div>-->
+  </section>
+</div>
+
+<div class="lead flex-shrink-0 p-3 bg-white" style="width: 300px; background-color: #212529!important; height: 89.99vh;" >
+    <a class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+      <span style="color: white!important;" class="fs-5 fw-semibold"> 🛡️ Admin Dashboard</span>
+    </a>
+    <ul style="color: white!important;" class="list-unstyled ps-0">
+      <li class="mb-1">
+        <button style="color: #FFD700!important;" class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+          Attendance
+        </button>
+        <div class="collapse" id="dashboard-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a style="color: white!important;"   class="link-dark rounded">Statistics</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button  style="color: #FFD700!important;" class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
+          Service Projects
+        </button>
+        <div class="collapse" id="home-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a  style="color: white!important;"   class="link-dark rounded">Non-Signature Service Projects</a></li>
+            <li><a  style="color: white!important;"   class="link-dark rounded">Hour Log Submissions</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button  style="color: #FFD700!important;" class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+          Website
+        </button>
+        <div class="collapse" id="orders-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a style="color: white!important;" href="javascript:showSection(0);" class="link-dark rounded">Volunteering Opportunities</a></li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
+
