@@ -63,7 +63,7 @@ if(testing) {
 }
 
 /** Deployment process */
-
+var bcd = true;
 
 /* Google Authentication */
 const googleConfig = {
@@ -268,13 +268,15 @@ app.post('/admin-data', function(req, res) {
 app.post('/member-setup', async function(req, res) {
     req.on('data', async function(data) {
         const user_id = data.toString().replace('@forsythk12.org', '');
+        checkHourLogSubmission(user_id);
         // Date template
         var export_data = {
             "attendance": {
                 "past_attendance": [],
                 "current_attendance": []
             },
-            "nonSignatureServiceProjects": []
+            "nonSignatureServiceProjects": [],
+            "hourLogFirstSemester": bcd
         };
 
         sheets.spreadsheets.values.batchGet({
@@ -525,6 +527,141 @@ try {
     }); 
 } catch(e) {res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html?error=504` + "\";</script>");}
 
+/* Hour Log Submission */
+try {
+    const upload = multer({
+        limits: {
+          fileSize: 4 * 1024 * 1024, // 4 MB storage
+        },
+        storage: multer.memoryStorage()
+    });
+    
+    app.post('/submitHourLog', upload.single('document_file'), async function(req, res) {
+        let userID = req.body.userID.toString().replace('@forsythk12.org', '');
+        let stream = require('stream');
+        let fileObject = req.file;
+        let bufferStream = new stream.PassThrough();
+        bufferStream.end(fileObject.buffer);
+        let semesterFolder = '1LWVSe5QfY6IZcTRiV55fNfl4qNFQvW0E';
+        let folderID = "";
+        var pageToken = null;
+        async.doWhilst(function (callback) {
+            drive.files.list({
+                q: `'${semesterFolder}' in parents and mimeType = 'application/vnd.google-apps.folder'`,
+                fields: 'nextPageToken, files(id, name)',
+                spaces: 'drive',
+                pageToken: pageToken
+            }, function (err, res) {
+                if (err) {
+                    res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html?error=504` + "\";</script>");
+                    callback(err)
+                } else {
+                    res.data.files.forEach(function (file) {
+                        if(file.name == userID) {
+                            folderID = file.id;
+                        }
+                    });
+                    pageToken = res.nextPageToken;
+                    callback();
+                }
+            });
+        }, function () {
+            return !!pageToken;
+        }, async function (err) {
+            if (err) {
+                res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html?error=504` + "\";</script>");
+            } else {
+                if(folderID != "") {
+                    let libCount = 0;
+                    var pageToken = null;
+                    async.doWhilst(function (callback) {
+                        drive.files.list({
+                            q: `'${folderID}' in parents`,
+                            fields: 'nextPageToken, files(id, name)',
+                            spaces: 'drive',
+                            pageToken: pageToken
+                        }, function (err, res) {
+                            if (err) {
+                                res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html?error=504` + "\";</script>");
+                            } else {
+                                res.data.files.forEach(function (file) {
+                                    libCount++;
+                                });
+                                pageToken = res.nextPageToken;
+                                callback();
+                            }
+                        });
+                    }, function () {
+                        return !!pageToken;
+                    }, function (err) {
+                        if (err) {
+                            res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html?error=504` + "\";</script>");
+                        } else {
+                             if(fileObject.mimetype == "application/pdf") {
+                                var fileMetadata = {
+                                    'name': `HourLog.pdf`,
+                                    parents: [folderID]
+                                };
+                                var media = {
+                                    mimeType: fileObject.mimetype,
+                                    body: bufferStream
+                                };
+                                drive.files.create({
+                                    resource: fileMetadata,
+                                    media: media,
+                                    fields: 'id'
+                                }, function (err, file) {
+                                    if (err) {
+                                        res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html?error=504` + "\";</script>");
+                                    } else {
+                                        res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html` + "\";</script>");
+                                    }
+                                });
+                            }
+                        }
+                    })
+                } else {
+                    // Folder for user hasn't been created yet
+                    var fileMetadata = {
+                        'name': userID,
+                        parents: [semesterFolder],
+                        'mimeType': 'application/vnd.google-apps.folder'
+                      };
+                      drive.files.create({
+                        resource: fileMetadata,
+                        fields: 'id'
+                      }, async function (err, file) {
+                        if (err) {
+                            res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html?error=504` + "\";</script>");
+                        } else {
+                            if(fileObject.mimetype == "application/pdf") {
+                                var fileMetadata = {
+                                    'name': `HourLog.pdf`,
+                                    parents: [file.data.id]
+                                };
+                                var media = {
+                                    mimeType: fileObject.mimetype,
+                                    body: bufferStream
+                                };
+                                drive.files.create({
+                                    resource: fileMetadata,
+                                    media: media,
+                                    fields: 'id'
+                                }, function (err, file) {
+                                    if (err) {
+                                        res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html?error=504` + "\";</script>");
+                                    } else {
+                                        res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html` + "\";</script>");
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        })
+    }); 
+} catch(e) {res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html?error=504` + "\";</script>");}
 
 /* Uptime robot configuration */
 app.get('*', function(req, res) {
@@ -537,7 +674,74 @@ app.get('*', function(req, res) {
     });
 });
 
-
+/* Check if Hour Log Submitted */
+async function checkHourLogSubmission(userID) {
+    let semesterFolder = '1LWVSe5QfY6IZcTRiV55fNfl4qNFQvW0E';
+    let folderID = "";
+    var pageToken = null;
+    async.doWhilst(function (callback) {
+        drive.files.list({
+            q: `'${semesterFolder}' in parents and mimeType = 'application/vnd.google-apps.folder'`,
+            fields: 'nextPageToken, files(id, name)',
+            spaces: 'drive',
+            pageToken: pageToken
+        }, function (err, res) {
+            if (err) {
+                res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html?error=504` + "\";</script>");
+                callback(err)
+            } else {
+                res.data.files.forEach(function (file) {
+                    if(file.name == userID) {
+                        folderID = file.id;
+                    }
+                });
+                pageToken = res.nextPageToken;
+                callback();
+            }
+        });
+    }, function () {
+        return false;
+    }, async function (err) {
+        if (err) {
+            return false;
+        } else {
+            if(folderID != "") {
+                let libCount = 0;
+                var pageToken = null;
+                async.doWhilst(function (callback) {
+                    drive.files.list({
+                        q: `'${folderID}' in parents`,
+                        fields: 'nextPageToken, files(id, name)',
+                        spaces: 'drive',
+                        pageToken: pageToken
+                    }, function (err, res) {
+                        if (err) {
+                            res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html?error=504` + "\";</script>");
+                        } else {
+                            res.data.files.forEach(function (file) {
+                                libCount++;
+                            });
+                            pageToken = res.nextPageToken;
+                            callback();
+                        }
+                    });
+                }, function () {
+                    return !!pageToken;
+                }, function (err) {
+                    if (err) {
+                        return false;
+                    } else {
+                        bcd = false;
+                        return false;
+                    }
+                })
+            } else {
+                bcd = true;
+                return true;
+            }
+        }
+    })
+}
 
 app.listen(port, () => {});
 
