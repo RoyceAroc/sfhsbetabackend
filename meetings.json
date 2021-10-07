@@ -35,5 +35,41 @@
         ],
         "video_url": "https://dl.dropboxusercontent.com/s/bhm7jukwstrd2fm/fN2M3NjY0ZDZiNTgwNTVmMjgzNTFjZWM4ZjM2NDcwY2I.highres.mp4",
         "slideshow_url": "https://docs.google.com/presentation/d/1DIRkIY9fV661gXTFEUvPg2KEMWt_Ux9pEBno7a_TkjE/edit?usp=sharing"
+    }, {
+        "init": 1,
+        "type": "October",
+        "start": "2021-10-6",
+        "end": "2021-10-18",
+        "questions": [
+            {
+                "question": "What's the SFHS Beta Club Website link?",
+                "time": 154,
+                "optionA": "southforsythbeta.com",
+                "optionB": "sfhsbeta.com",
+                "optionC": "southforsythhsbeta.com",
+                "optionD": "betasfhs.com",
+                "answer": 2
+            },
+            {
+                "question": "When will the Trunk or Treat take place?",
+                "time": 446,
+                "optionA": "October 27, 2021",
+                "optionB": "October 13, 2021",
+                "optionC": "November 27, 2021",
+                "optionD": "November 13, 2021",
+                "answer": 1
+            },
+            {
+                "question": "When will the Beta Convention Information Meeting take place?",
+                "time": 664,
+                "optionA": "Friday, October 29th from 3:45-4:30 PM",
+                "optionB": "Monday, October 18th from 3:45-4:30 PM",
+                "optionC": "Wednesday, October 13th from 3:45-4:30 PM",
+                "optionD": "Thursday, October 14th from 3:45-4:30 PM",
+                "answer": 4
+            }
+        ],
+        "video_url": "https://dl.dropboxusercontent.com/s/gb54thxq5gb6l5u/october.mp4",
+        "slideshow_url": "https://docs.google.com/presentation/d/1KIuMpD8v3BgpjxW7dQAhZHqqKMldnbOPJn3rI_fYkfM/edit?usp=sharing"
     }
 ]
