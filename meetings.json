@@ -71,5 +71,41 @@
         ],
         "video_url": "https://dl.dropboxusercontent.com/s/gb54thxq5gb6l5u/october.mp4",
         "slideshow_url": "https://docs.google.com/presentation/d/1KIuMpD8v3BgpjxW7dQAhZHqqKMldnbOPJn3rI_fYkfM/edit?usp=sharing"
+    }, {
+        "init": 2,
+        "type": "November",
+        "start": "2021-11-1",
+        "end": "2021-11-24",
+        "questions": [
+            {
+                "question": "What email do you use to contact us if you have any questions or concerns?",
+                "time": 183,
+                "optionA": "southforsythbeta@gmail.com",
+                "optionB": "sfhsbeta@gmail.com",
+                "optionC": "southforsythhsbeta@gmail.com",
+                "optionD": "betasfhs@gmail.com",
+                "answer": 2
+            },
+            {
+                "question": "Which of the following is NOT true about the opportunity by Make-A-Wish?",
+                "time": 460,
+                "optionA": "You can get up to 4 hours for BETA club service from this opportunity",
+                "optionB": "A donation of 10 dollars is 2 hours service",
+                "optionC": "You can get up to 2 hours for BETA club service from this opportunity",
+                "optionD": "A donation of 5 dollars is 1 hour service",
+                "answer": 1
+            },
+            {
+                "question": "When is the application for Crew Leaders due?",
+                "time": 664,
+                "optionA": "November 30th, 2021",
+                "optionB": "November 15th, 2021",
+                "optionC": "November 19th, 2021",
+                "optionD": "November 12th, 2021",
+                "answer": 4
+            }
+        ],
+        "video_url": "https://dl.dropboxusercontent.com/s/m2c31ldzts59bwr/nov.mp4",
+        "slideshow_url": "https://docs.google.com/presentation/d/1ethYwX2osTwwvLyX1snTP6pZGtdZujEIO7mkx9lKNH0/edit?usp=sharing"
     }
 ]
