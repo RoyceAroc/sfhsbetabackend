@@ -132,13 +132,50 @@ main {
     </div>
 </form>
 </div>
+
+
 <div style=" left: 300px; position: fixed; overflow-y:auto; padding: 20px; height: 90vh;"> 
-  <section class="section-admin lead" style="display: block;" id="0-section">
+
+  <section class="section-admin lead" style="display: none;" id="0-section">
+    <h1>Attendance Statistics</h1> 
+    <hr></hr>
+    Feature coming soon. 
+  </section>
+  <section class="section-admin lead" style="display: none;" id="1-section">
+    <h1>Non-Signature Service Project Submissions</h1> 
+    <hr></hr>
+    <div id="_searchgroup" class="input-group mb-3">
+      <input type="text" placeholder="Name" class="form-control" id="name_search-ns" aria-label="Name"></input>
+      <select style="max-width: 160px!important;" class="form-select" id="grade_search-ns">
+        <option value="0" selected>All grades</option>
+        <option value="1">10th</option>
+        <option value="2">11th</option>
+        <option value="3">12th</option>
+      </select>
+      <select style="max-width: 160px!important;" class="form-select" id="status_search-ns">
+        <option value="0" selected>Pending</option>
+        <option value="1">Approved</option>
+        <option value="2">Denied</option>
+        <option value="3">All statuses </option>
+      </select>
+      <button class="btn btn-outline-secondary" onclick="displayPortal()" type="button">Search</button>
+    </div>
+    <table style="overflow-y: scroll;" id="_tabgroup"></table>
+    <groupfile style="display: none;" id="_groupfile">
+    </groupfile>
+  </section>
+  <section class="section-admin lead" style="display: none;" id="2-section">
+    <h1>Hour Log Submissions</h1> 
+    <hr></hr>
+    Feature coming soon. 
+  </section>
+  <section class="section-admin lead" style="display: none;" id="3-section">
     <h1>Volunteering Opportunities</h1> 
     <hr></hr>
     <a href="javascript:showCreateVolunteeringOpportunity()">Click here to create a volunteering opportunity!</a>
     <br><br>
-    <h3>Edit Volunteering Opportunities (Feature Coming Soon - Contact Royce to change anything until the feature is available)</h3>
+    <i> If you have any problems or concerns, contact me at royceaden@gmail.com </i>
+  <!--  <h3>Edit Volunteering Opportunities (Feature Coming Soon - Contact Royce to change anything until the feature is available)</h3>-->
     <!--<div  class="container">
       <div class="row">
         <div class="card" style="width: 18rem; margin:20px">
@@ -209,8 +246,7 @@ main {
     </div>-->
   </section>
 </div>
-
-<div class="lead flex-shrink-0 p-3 bg-white" style="width: 300px; background-color: #212529!important; height: 89.99vh;" >
+<div class="lead flex-shrink-0 p-3 bg-white" style="width: 300px; background-color: #212529!important; height: 100vh;" >
     <a class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
       <span style="color: white!important;" class="fs-5 fw-semibold"> 🛡️ Admin Dashboard</span>
     </a>
@@ -221,7 +257,8 @@ main {
         </button>
         <div class="collapse" id="dashboard-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><a style="color: white!important;"   class="link-dark rounded">Statistics</a></li>
+            <li><a style="color: white!important;" target="_blank" href="https://docs.google.com/spreadsheets/d/1SzTrrUvB-viMYahRFTiv1RjJLzP88tvBYMI_5QMabJE/edit#gid=0"  class="link-dark rounded">Attendance Log</a></li>
+            <li><a style="color: white!important;" href="javascript:showSection(0);"  class="link-dark rounded">Statistics</a></li>
           </ul>
         </div>
       </li>
@@ -231,8 +268,8 @@ main {
         </button>
         <div class="collapse" id="home-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><a  style="color: white!important;"   class="link-dark rounded">Non-Signature Service Projects</a></li>
-            <li><a  style="color: white!important;"   class="link-dark rounded">Hour Log Submissions</a></li>
+            <li><a  style="color: white!important;" href="javascript:showSection(1);"  class="link-dark rounded">Non-Signature Service Projects</a></li>
+            <li><a  style="color: white!important;" href="javascript:showSection(2);"  class="link-dark rounded">Hour Log Submissions</a></li>
           </ul>
         </div>
       </li>
@@ -242,7 +279,7 @@ main {
         </button>
         <div class="collapse" id="orders-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><a style="color: white!important;" href="javascript:showSection(0);" class="link-dark rounded">Volunteering Opportunities</a></li>
+            <li><a style="color: white!important;" href="javascript:showSection(3);" class="link-dark rounded">Volunteering Opportunities</a></li>
           </ul>
         </div>
       </li>

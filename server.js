@@ -263,6 +263,202 @@ app.post('/admin-data', function(req, res) {
         }
     })
 })
+async function getAttendanceData() {
+    var export_data = {
+        "memberLogistics": [],
+        "nonSignatureServiceProjects": [],
+        "hourLogSubmissions": []
+    }; 
+    const request = {
+        spreadsheetId: '1SzTrrUvB-viMYahRFTiv1RjJLzP88tvBYMI_5QMabJE',
+        ranges: [],
+        includeGridData: true,
+    };
+    try {
+        const response = (await sheets.spreadsheets.get(request)).data;
+        let data = JSON.parse(JSON.stringify(response, null, 2));
+        let monthsActive = 3;
+        let monthCheckAction = data.sheets[0].data[0].rowData[1].values[monthsActive].userEnteredFormat.backgroundColor;
+        while(true) {
+            if((monthCheckAction.red == 1 || monthCheckAction.orange == 1) || (monthCheckAction.green == 1 || monthCheckAction.green == 0.6)) {
+                monthsActive++;
+                if(data.sheets[0].data[0].rowData[1].values[monthsActive] != undefined) {
+                    monthCheckAction = data.sheets[0].data[0].rowData[1].values[monthsActive].userEnteredFormat.backgroundColor;
+                } else {
+                    break;
+                }
+            } else { break;}
+        }
+
+        for (let i = 0; i < 3; ++i) {
+            try {
+                for (let j = 1; j <= data.sheets[i].properties.gridProperties.rowCount; ++j) {
+                    var sub_template = {
+                        "firstName": data.sheets[i].data[0].rowData[j].values[0].userEnteredValue.stringValue,
+                        "lastName": data.sheets[i].data[0].rowData[j].values[1].userEnteredValue.stringValue,
+                        "user_id": data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.stringValue,
+                        "grade": i,
+                        "monthAttendance": []
+                    }
+                    for(let m=3; m<monthsActive; m++) {
+                        let attendanceCheck = data.sheets[i].data[0].rowData[j].values[m].userEnteredFormat.backgroundColor;
+                        if(attendanceCheck.red == 1) {
+                            sub_template.monthAttendance.push(false);
+                        } else {
+                            sub_template.monthAttendance.push(true);
+                        }
+                    }
+                    export_data.memberLogistics.push(sub_template);
+                }
+            } catch(e) {}      
+        }
+        return export_data;
+    } catch (err) {
+        
+    }
+    return export_data;
+}
+async function getNonSignatureServiceProjects(export_data) {
+    const request = {
+        spreadsheetId: '1RfHIvm90vtwlswODlWyz4rB40Yc9OaXuzIQ9Zo5ao-o',
+        ranges: [],
+        includeGridData: true,
+    };
+    try {
+        const response = (await sheets.spreadsheets.get(request)).data;
+        let data = JSON.parse(JSON.stringify(response, null, 2));
+        for (let i = 0; i < 1; ++i) {
+            try {
+                for (let j = 1; j <= data.sheets[i].properties.gridProperties.rowCount; ++j) {
+                    let user_id = data.sheets[i].data[0].rowData[j].values[0].userEnteredValue.stringValue;
+                    let restart =  -1;
+                    for(let i=0; i<export_data.nonSignatureServiceProjects.length; i++) {
+                        if(export_data.nonSignatureServiceProjects[i].userid == user_id) {
+                            restart = i;
+                        }
+                    }
+                    if(restart == -1) {
+                        var sub_template = {
+                            "userid": user_id,
+                            "projects": [{
+                                "description": data.sheets[i].data[0].rowData[j].values[1].userEnteredValue.stringValue,
+                                "minutes": data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.numberValue,
+                                "relation": data.sheets[i].data[0].rowData[j].values[3].userEnteredValue.stringValue,
+                                "status": data.sheets[i].data[0].rowData[j].values[4].userEnteredValue.stringValue,
+                                "comment": (data.sheets[i].data[0].rowData[j].values[5].userEnteredValue == undefined ? "" : data.sheets[i].data[0].rowData[j].values[5].userEnteredValue.stringValue),
+                            }]
+                        };
+                        export_data.nonSignatureServiceProjects.push(sub_template);
+                    } else {
+                        var project = {
+                            "description": data.sheets[i].data[0].rowData[j].values[1].userEnteredValue.stringValue,
+                            "minutes": data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.numberValue,
+                            "relation": data.sheets[i].data[0].rowData[j].values[3].userEnteredValue.stringValue,
+                            "status": data.sheets[i].data[0].rowData[j].values[4].userEnteredValue.stringValue,
+                            "comment": (data.sheets[i].data[0].rowData[j].values[5].userEnteredValue == undefined ? "" : data.sheets[i].data[0].rowData[j].values[5].userEnteredValue.stringValue),
+                        };
+                        export_data.nonSignatureServiceProjects[restart].projects.push(project);
+                    }
+                }
+            } catch(e) {}      
+        }
+        return export_data;
+    } catch (err) {
+        return false;
+    }
+}
+
+/* Populating Admin Data for Components */
+app.post('/admin-data-components', async function(req, res) {
+    req.on('data', async function(data) {
+        if (data == admin) {
+            res.send(await getNonSignatureServiceProjects(await getAttendanceData()));
+        } else {
+            res.send(false);
+        }
+    })
+})
+
+/* Change spreadsheet to approved/denied for project entry */ 
+app.post('/admin-updateProject', async function(req, res) {
+    req.on('data', async function(data) {
+        var obj = JSON.parse(data);
+        // UPDATE SPREADSHEET FUNCTION
+        const request = {
+            spreadsheetId: '1RfHIvm90vtwlswODlWyz4rB40Yc9OaXuzIQ9Zo5ao-o',
+            ranges: [],
+            includeGridData: true,
+        };
+        try {
+            let j=0;
+            const response = (await sheets.spreadsheets.get(request)).data;
+            let data = JSON.parse(JSON.stringify(response, null, 2));
+            for (let i = 0; i < 1; i++) {
+                try {
+                    for (j = 0; j < data.sheets[i].properties.gridProperties.rowCount; j++) {
+                        try {
+                            let relation = data.sheets[i].data[0].rowData[j].values[3].formattedValue;
+                            if (relation == obj.proj_relation) {
+                                        sheets.spreadsheets.batchUpdate({
+                                            spreadsheetId: '1RfHIvm90vtwlswODlWyz4rB40Yc9OaXuzIQ9Zo5ao-o',
+                                            resource: {
+                                                requests: [
+                                                {
+                                                    repeatCell: {
+                                                    range: {
+                                                        "sheetId": 0,
+                                                        startRowIndex: j,
+                                                        startColumnIndex: 4,
+                                                        endColumnIndex: 5,
+                                                        endRowIndex: j+1
+                                                    },
+                                                    cell: {
+                                                        userEnteredValue: {
+                                                            stringValue: obj.approved,
+                                                        }
+                                                    },
+                                                    fields: 'userEnteredValue(stringValue)'
+                                                    }
+                                                },
+                                                ]
+                                            }
+                                        });
+                                        sheets.spreadsheets.batchUpdate({
+                                            spreadsheetId: '1RfHIvm90vtwlswODlWyz4rB40Yc9OaXuzIQ9Zo5ao-o',
+                                            resource: {
+                                                requests: [
+                                                {
+                                                    repeatCell: {
+                                                    range: {
+                                                        "sheetId": 0,
+                                                        startRowIndex: j,
+                                                        startColumnIndex: 5,
+                                                        endColumnIndex: 6,
+                                                        endRowIndex: j+1
+                                                    },
+                                                    cell: {
+                                                        userEnteredValue: {
+                                                            stringValue: obj.comment,
+                                                        }
+                                                    },
+                                                    fields: 'userEnteredValue(stringValue)'
+                                                    }
+                                                },
+                                                ]
+                                            }
+                                        });
+                                res.send("Done!");
+                            }
+                        } catch(e) {}    
+                    }
+                } catch (e) {}
+            }
+            return false;
+        } catch (err) {
+            return false;
+        }
+    })
+})
 
 /* Populating Member Setup */
 app.post('/member-setup', async function(req, res) {
@@ -284,8 +480,7 @@ app.post('/member-setup', async function(req, res) {
             ranges: 'Sheet1',
           }, (err, result) => {
             if (err) {
-              // Handle error
-              console.log(err);
+           
             } else {
                 let table = result.data.valueRanges[0].values;
                 for(let i=0; i<table.length; i++){
