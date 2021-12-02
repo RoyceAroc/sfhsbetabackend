@@ -107,5 +107,41 @@
         ],
         "video_url": "https://dl.dropboxusercontent.com/s/m2c31ldzts59bwr/nov.mp4",
         "slideshow_url": "https://docs.google.com/presentation/d/1ethYwX2osTwwvLyX1snTP6pZGtdZujEIO7mkx9lKNH0/edit?usp=sharing"
+    },  {
+        "init": 3,
+        "type": "December",
+        "start": "2021-12-1",
+        "end": "2021-12-19",
+        "questions": [
+            {
+                "question": "Who does NOT have to submit an hour log this semester?",
+                "time": 183,
+                "optionA": "New Members",
+                "optionB": "Returning Members",
+                "optionC": "Juniors",
+                "optionD": "Seniors",
+                "answer": 1
+            },
+            {
+                "question": "When is the deadline to submit scientific calculators for the NGF Drive?",
+                "time": 439,
+                "optionA": "December 25th",
+                "optionB": "December 29th",
+                "optionC": "December 19th",
+                "optionD": "December 17th",
+                "answer": 4
+            },
+            {
+                "question": "What email do you use to reach out to us about any questions?",
+                "time": 873,
+                "optionA": "southforsythbeta@gmail.com",
+                "optionB": "sfhsbeta@gmail.com",
+                "optionC": "sfhsbetaclub@gmail.com",
+                "optionD": "southforsythbetaclub@gmail.com",
+                "answer": 2
+            }
+        ],
+        "video_url": "https://dl.dropboxusercontent.com/s/6sbhk5f7kywm03q/MmI5OTQ4MzM3NzgxNDk0YTQwZTVhYzVhYjExZmQxNDY.highres.mp4",
+        "slideshow_url": "https://docs.google.com/presentation/d/1nRK_nPM77UDdmcG70omjjeeJZMXEKS3qB9LmgoO5fJk/edit?usp=sharing"
     }
 ]
