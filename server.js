@@ -328,8 +328,9 @@ async function getNonSignatureServiceProjects(export_data) {
         const response = (await sheets.spreadsheets.get(request)).data;
         let data = JSON.parse(JSON.stringify(response, null, 2));
         for (let i = 0; i < 1; ++i) {
+            var j;
             try {
-                for (let j = 1; j <= data.sheets[i].properties.gridProperties.rowCount; ++j) {
+                for ( j = 1; j <= data.sheets[i].properties.gridProperties.rowCount; ++j) {
                     let user_id = data.sheets[i].data[0].rowData[j].values[0].userEnteredValue.stringValue;
                     let restart =  -1;
                     for(let i=0; i<export_data.nonSignatureServiceProjects.length; i++) {
@@ -342,20 +343,20 @@ async function getNonSignatureServiceProjects(export_data) {
                             "userid": user_id,
                             "projects": [{
                                 "description": data.sheets[i].data[0].rowData[j].values[1].userEnteredValue.stringValue,
-                                "minutes": data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.numberValue,
+                                "minutes": (data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.numberValue == undefined ? data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.stringValue : data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.numberValue),
                                 "relation": data.sheets[i].data[0].rowData[j].values[3].userEnteredValue.stringValue,
                                 "status": data.sheets[i].data[0].rowData[j].values[4].userEnteredValue.stringValue,
-                                "comment": (data.sheets[i].data[0].rowData[j].values[5].userEnteredValue == undefined ? "" : data.sheets[i].data[0].rowData[j].values[5].userEnteredValue.stringValue),
+                                "comment": (data.sheets[i].data[0].rowData[j].values[5] == undefined ? "" : (data.sheets[i].data[0].rowData[j].values[5].userEnteredValue == undefined ? "" : data.sheets[i].data[0].rowData[j].values[5].userEnteredValue.stringValue)),
                             }]
                         };
                         export_data.nonSignatureServiceProjects.push(sub_template);
                     } else {
                         var project = {
                             "description": data.sheets[i].data[0].rowData[j].values[1].userEnteredValue.stringValue,
-                            "minutes": data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.numberValue,
+                            "minutes": (data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.numberValue == undefined ? data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.stringValue : data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.numberValue),
                             "relation": data.sheets[i].data[0].rowData[j].values[3].userEnteredValue.stringValue,
                             "status": data.sheets[i].data[0].rowData[j].values[4].userEnteredValue.stringValue,
-                            "comment": (data.sheets[i].data[0].rowData[j].values[5].userEnteredValue == undefined ? "" : data.sheets[i].data[0].rowData[j].values[5].userEnteredValue.stringValue),
+                            "comment": (data.sheets[i].data[0].rowData[j].values[5] == undefined ? "" : (data.sheets[i].data[0].rowData[j].values[5].userEnteredValue == undefined ? "" : data.sheets[i].data[0].rowData[j].values[5].userEnteredValue.stringValue)),
                         };
                         export_data.nonSignatureServiceProjects[restart].projects.push(project);
                     }
