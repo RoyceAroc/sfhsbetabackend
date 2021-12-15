@@ -63,7 +63,7 @@ if(testing) {
 }
 
 /** Deployment process */
-var bcd = true;
+var userID = "";
 
 /* Google Authentication */
 const googleConfig = {
@@ -373,6 +373,7 @@ async function getNonSignatureServiceProjects(export_data) {
 app.post('/admin-data-components', async function(req, res) {
     req.on('data', async function(data) {
         if (data == admin) {
+            //await that too
             res.send(await getNonSignatureServiceProjects(await getAttendanceData()));
         } else {
             res.send(false);
@@ -463,70 +464,185 @@ app.post('/admin-updateProject', async function(req, res) {
 
 /* Populating Member Setup */
 app.post('/member-setup', async function(req, res) {
+    var export_data = {};
     req.on('data', async function(data) {
         const user_id = data.toString().replace('@forsythk12.org', '');
-        checkHourLogSubmission(user_id);
-        // Date template
-        var export_data = {
-            "attendance": {
-                "past_attendance": [],
-                "current_attendance": []
-            },
-            "nonSignatureServiceProjects": [],
-            "hourLogFirstSemester": bcd
-        };
-
-        sheets.spreadsheets.values.batchGet({
-            spreadsheetId: '1RfHIvm90vtwlswODlWyz4rB40Yc9OaXuzIQ9Zo5ao-o',
-            ranges: 'Sheet1',
-          }, (err, result) => {
-            if (err) {
-           
-            } else {
-                let table = result.data.valueRanges[0].values;
-                for(let i=0; i<table.length; i++){
-                    if(table[i][0] == user_id) {
-                        export_data.nonSignatureServiceProjects.push({
-                            "description": table[i][1],
-                            "minutes": table[i][2],
-                            "relation": table[i][3],
-                            "status": table[i][4],
-                            "comment": table[i][5]
+         userID = user_id;
+                export_data = {
+                    "attendance": {
+                        "past_attendance": [],
+                        "current_attendance": []
+                    },
+                    "nonSignatureServiceProjects": [],
+                    "hourLog": {
+                        "first_sem": {
+                            "status": '',
+                            "pdf": '',
+                            "note": ''
+                        }
+                    }
+                };
+        
+                sheets.spreadsheets.values.batchGet({
+                    spreadsheetId: '1RfHIvm90vtwlswODlWyz4rB40Yc9OaXuzIQ9Zo5ao-o',
+                    ranges: 'Sheet1',
+                  }, (err, result) => {
+                    if (err) {
+                   
+                    } else {
+                        let table = result.data.valueRanges[0].values;
+                        for(let i=0; i<table.length; i++){
+                            if(table[i][0] == user_id) {
+                                export_data.nonSignatureServiceProjects.push({
+                                    "description": table[i][1],
+                                    "minutes": table[i][2],
+                                    "relation": table[i][3],
+                                    "status": table[i][4],
+                                    "comment": table[i][5]
+                                });
+                            }
+                        }
+                    }
+                });
+        
+                const meeting_data = JSON.parse(fs.readFileSync('meetings.json', 'utf8'));
+                for(let i=0; i<meeting_data.length; i++) {
+                    if(new Date(meeting_data[i].end) <= new Date()) {
+                        export_data.attendance.past_attendance.push({
+                            "type": meeting_data[i].type,
+                            "init": meeting_data[i].init,
+                            "questions": meeting_data[i].questions,
+                            "completed": await checkAttendanceStatus(user_id, i+3),
+                            "start": meeting_data[i].start,
+                            "end": meeting_data[i].end,
+                            "video_url": meeting_data[i].video_url,
+                            "slideshow_url": meeting_data[i].slideshow_url,
+                        });
+                    } else if(new Date(meeting_data[i].start) <= new Date()) {
+                        export_data.attendance.current_attendance.push({
+                            "type": meeting_data[i].type,
+                            "questions": meeting_data[i].questions,
+                            "init": meeting_data[i].init,
+                            "completed": await checkAttendanceStatus(user_id, i+3),
+                            "start": meeting_data[i].start,
+                            "end": meeting_data[i].end,
+                            "video_url": meeting_data[i].video_url,
+                            "slideshow_url": meeting_data[i].slideshow_url,
                         });
                     }
                 }
+
+                
+                let semesterFolder = '1LWVSe5QfY6IZcTRiV55fNfl4qNFQvW0E';
+    let folderID = "";
+    var pageToken = null;
+    async.doWhilst(function (callback) {
+        drive.files.list({
+            q: `'${semesterFolder}' in parents and mimeType = 'application/vnd.google-apps.folder'`,
+            fields: 'nextPageToken, files(id, name)',
+            spaces: 'drive',
+            pageToken: pageToken
+        }, function (err, res) {
+            if (err) {
+                callback(err)
+            } else {
+                res.data.files.forEach(function (file) {
+                    if(file.name == userID) {
+                        folderID = file.id;
+                    }
+                });
+                pageToken = res.nextPageToken;
+                callback();
             }
         });
+    },  function () {
+    
 
-        const meeting_data = JSON.parse(fs.readFileSync('meetings.json', 'utf8'));
-        for(let i=0; i<meeting_data.length; i++) {
-            if(new Date(meeting_data[i].end) <= new Date()) {
-                export_data.attendance.past_attendance.push({
-                    "type": meeting_data[i].type,
-                    "init": meeting_data[i].init,
-                    "questions": meeting_data[i].questions,
-                    "completed": await checkAttendanceStatus(user_id, i+3),
-                    "start": meeting_data[i].start,
-                    "end": meeting_data[i].end,
-                    "video_url": meeting_data[i].video_url,
-                    "slideshow_url": meeting_data[i].slideshow_url,
+        if(folderID != "") {
+            let libCount = 0;
+            var pageToken = null;
+            async.doWhilst(async function (callback) {
+                drive.files.list({
+                    q: `'${folderID}' in parents`,
+                    fields: 'nextPageToken, files(id, name)',
+                    spaces: 'drive',
+                    pageToken: pageToken
+                }, async function (err, res) {
+                    if (err) {
+                    } else {
+                        res.data.files.forEach(async function (file) {
+                            export_data.hourLog.first_sem.pdf= file.id;
+                        });
+                        
+                        const request2 = {
+                            spreadsheetId: '1_a7XFYtcvvK77H67o9gVY3m19jlQEBQ2cnxOJv99A9U',
+                            ranges: [],
+                            includeGridData: true,
+                        };
+                        
+                        try {
+                            let j=0;
+                            const response2 = (await sheets.spreadsheets.get(request2)).data;
+                            
+                            let data = JSON.parse(JSON.stringify(response2, null, 2));
+                           
+                            for (let i = 0; i < 1; i++) {
+                                try {
+                                    for (j = 0; j < data.sheets[i].properties.gridProperties.rowCount; j++) {
+                                        try {
+                                            let user_id = data.sheets[i].data[0].rowData[j].values[0].formattedValue;
+                                            if (user_id == userID) {
+                                                // CHECK
+                                                export_data.hourLog.first_sem.status = data.sheets[i].data[0].rowData[j].values[1].formattedValue;
+                                                export_data.hourLog.first_sem.note = data.sheets[i].data[0].rowData[j].values[2].formattedValue;
+                                                
+                                            } 
+                                        } catch(e) {}    
+                                    }
+                                } catch (e) {}
+
+                            }
+                            if(export_data.hourLog.first_sem.status == "") {
+                                
+                                export_data.hourLog.first_sem.status = "pending";
+                                export_data.hourLog.first_sem.note = "none";
+                                
+                            }
+                        } catch (err) {
+                        }
+                        
+                        pageToken = res.nextPageToken;
+                        callback();
+
+                        
+                    }
+                    
                 });
-            } else if(new Date(meeting_data[i].start) <= new Date()) {
-                export_data.attendance.current_attendance.push({
-                    "type": meeting_data[i].type,
-                    "questions": meeting_data[i].questions,
-                    "init": meeting_data[i].init,
-                    "completed": await checkAttendanceStatus(user_id, i+3),
-                    "start": meeting_data[i].start,
-                    "end": meeting_data[i].end,
-                    "video_url": meeting_data[i].video_url,
-                    "slideshow_url": meeting_data[i].slideshow_url,
-                });
-            }
+                
+            }, function () {
+                res.send(export_data);
+               return !!pageToken;
+            }, function (err) {
+                if (err) {
+                } 
+            })
+
+           
+        } else {
+            export_data.hourLog.first_sem.status = "none";
+            export_data.hourLog.first_sem.pdf = "none";
+            export_data.hourLog.first_sem.note = "none";
+            res.send(export_data);
         }
 
-        res.send(export_data);
+
+
+    }, async function (err) {
+
     })
+                
+    })
+    
 })
 
 function addNonSignatureServiceProjectToSheet(userID, description, hours, minutes, relation) {
@@ -870,74 +986,8 @@ app.get('*', function(req, res) {
     });
 });
 
-/* Check if Hour Log Submitted */
-async function checkHourLogSubmission(userID) {
-    let semesterFolder = '1LWVSe5QfY6IZcTRiV55fNfl4qNFQvW0E';
-    let folderID = "";
-    var pageToken = null;
-    async.doWhilst(function (callback) {
-        drive.files.list({
-            q: `'${semesterFolder}' in parents and mimeType = 'application/vnd.google-apps.folder'`,
-            fields: 'nextPageToken, files(id, name)',
-            spaces: 'drive',
-            pageToken: pageToken
-        }, function (err, res) {
-            if (err) {
-                res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html?error=504` + "\";</script>");
-                callback(err)
-            } else {
-                res.data.files.forEach(function (file) {
-                    if(file.name == userID) {
-                        folderID = file.id;
-                    }
-                });
-                pageToken = res.nextPageToken;
-                callback();
-            }
-        });
-    }, function () {
-        return false;
-    }, async function (err) {
-        if (err) {
-            return false;
-        } else {
-            if(folderID != "") {
-                let libCount = 0;
-                var pageToken = null;
-                async.doWhilst(function (callback) {
-                    drive.files.list({
-                        q: `'${folderID}' in parents`,
-                        fields: 'nextPageToken, files(id, name)',
-                        spaces: 'drive',
-                        pageToken: pageToken
-                    }, function (err, res) {
-                        if (err) {
-                            res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html?error=504` + "\";</script>");
-                        } else {
-                            res.data.files.forEach(function (file) {
-                                libCount++;
-                            });
-                            pageToken = res.nextPageToken;
-                            callback();
-                        }
-                    });
-                }, function () {
-                    return !!pageToken;
-                }, function (err) {
-                    if (err) {
-                        return false;
-                    } else {
-                        bcd = false;
-                        return false;
-                    }
-                })
-            } else {
-                bcd = true;
-                return true;
-            }
-        }
-    })
-}
+
+
 
 app.listen(port, () => {});
 
