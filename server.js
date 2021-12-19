@@ -53,7 +53,7 @@ const sheets = google.sheets({
 });
 
 /** Deployment process */
-var testing =false; // Set to false if deploying
+var testing = false; // Set to false if deploying
 if(testing) {
     var serverLink = 'http://localhost:3000';
     var redirectLink = 'http://localhost:5501';
@@ -263,11 +263,67 @@ app.post('/admin-data', function(req, res) {
         }
     })
 })
+
+async function getHourLogs(export_data) {
+    let semesterFolder = '1LWVSe5QfY6IZcTRiV55fNfl4qNFQvW0E';
+    let totalA = 0;
+    var pageToken = null; 
+    const res = await drive.files.list({
+        q: `'${semesterFolder}' in parents and mimeType = 'application/vnd.google-apps.folder'`,
+        fields: 'nextPageToken, files(id, name)',
+        spaces: 'drive',
+        orderBy: "name",
+        pageSize: 1000,
+        pageToken: pageToken
+    });
+    export_data.hourLogs = res.data.files; 
+    return export_data;
+}
+
+async function getHourStatus(export_data) {
+    const request2 = {
+        spreadsheetId: '1_a7XFYtcvvK77H67o9gVY3m19jlQEBQ2cnxOJv99A9U',
+        ranges: [],
+        includeGridData: true,
+    };
+    
+    try {
+        let j=0;
+        const response2 = (await sheets.spreadsheets.get(request2)).data;
+        
+        let data = JSON.parse(JSON.stringify(response2, null, 2));
+        
+        for (let i = 0; i < 1; i++) {
+            try {
+                for (j = 1; j < data.sheets[i].properties.gridProperties.rowCount; j++) {
+                    try {
+                        let indiHourStatus = {
+                            "id": data.sheets[i].data[0].rowData[j].values[0].formattedValue,
+                            "status": data.sheets[i].data[0].rowData[j].values[1].formattedValue,
+                            "note": data.sheets[i].data[0].rowData[j].values[2].formattedValue
+                        }
+                        export_data.hourStatus.push(indiHourStatus);
+                    } catch(e) {}    
+                }
+            } catch (e) {}
+        }
+    } catch (err) {}
+    return export_data;
+}
+
+async function getNewMembers(export_data) {
+    const newMember_data = JSON.parse(fs.readFileSync('new_members.json', 'utf8'));
+    export_data.newMembers = newMember_data;
+    return export_data;
+}
+
 async function getAttendanceData() {
     var export_data = {
         "memberLogistics": [],
         "nonSignatureServiceProjects": [],
-        "hourLogSubmissions": []
+        "newMembers":[],
+        "hourLogs":[],
+        "hourStatus":[]
     }; 
     const request = {
         spreadsheetId: '1SzTrrUvB-viMYahRFTiv1RjJLzP88tvBYMI_5QMabJE',
@@ -374,13 +430,37 @@ app.post('/admin-data-components', async function(req, res) {
     req.on('data', async function(data) {
         if (data == admin) {
             //await that too
-            res.send(await getNonSignatureServiceProjects(await getAttendanceData()));
+            res.send(await getHourStatus(await getHourLogs(await getNewMembers(await getNonSignatureServiceProjects(await getAttendanceData())))));
         } else {
             res.send(false);
         }
     })
 })
 
+/* Change Hour Log Status */
+app.post('/admin-updateHourLog', async function(req, res) {
+    req.on('data', async function(data) {
+        var obj = JSON.parse(data);
+        let a = obj.user_id.toString().length;
+        if(a == 5) {
+            a = "0" + obj.user_id.toString();
+        } else {
+            a = obj.user_id.toString();
+        }
+        sheets.spreadsheets.values.append({
+            spreadsheetId: '1_a7XFYtcvvK77H67o9gVY3m19jlQEBQ2cnxOJv99A9U',
+            range: 'Sheet1',
+            valueInputOption: 'RAW',
+            insertDataOption: 'INSERT_ROWS',
+            resource: {
+              values: [
+                [a, obj.approved, obj.note]
+              ],
+            }
+          }, (err, response) => {})
+          res.send("Done!");
+    })
+})   
 /* Change spreadsheet to approved/denied for project entry */ 
 app.post('/admin-updateProject', async function(req, res) {
     req.on('data', async function(data) {

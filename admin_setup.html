@@ -167,7 +167,32 @@ main {
   <section class="section-admin lead" style="display: none;" id="2-section">
     <h1>Hour Log Submissions</h1> 
     <hr></hr>
-    Feature coming soon. 
+       <div id="_searchgroup1" class="input-group mb-3">
+      <input type="text" placeholder="Name" class="form-control" id="name_search-ns1" aria-label="Name"></input>
+      <select style="max-width: 160px!important;" class="form-select" id="member_search-ns1">
+        <option value="0" selected>Old Members</option>
+        <option value="1">New Members</option>
+        <option value="2">All Members</option>
+      </select>
+      <select style="max-width: 160px!important;" class="form-select" id="grade_search-ns1">
+        <option value="0" selected>All grades</option>
+        <option value="1">10th</option>
+        <option value="2">11th</option>
+        <option value="3">12th</option>
+      </select>
+      <select style="max-width: 160px!important;" class="form-select" id="status_search-ns1">
+        <option value="0" selected>Pending</option>
+        <option value="1">Approved</option>
+        <option value="2">Denied</option>
+        <option value="3">Missing</option>
+        <option value="4">All statuses </option>
+      </select>
+      <button class="btn btn-outline-secondary" onclick="displayPortal1()" type="button">Search</button>
+    </div>
+    <table style="overflow-y: scroll;" id="_tabgroup1"></table>
+    <groupfile style="display: none;" id="_groupfile1">
+    </groupfile>
+
   </section>
   <section class="section-admin lead" style="display: none;" id="3-section">
     <h1>Volunteering Opportunities</h1> 
