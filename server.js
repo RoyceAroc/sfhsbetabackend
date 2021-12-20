@@ -619,9 +619,11 @@ app.post('/member-setup', async function(req, res) {
     async.doWhilst(function (callback) {
         drive.files.list({
             q: `'${semesterFolder}' in parents and mimeType = 'application/vnd.google-apps.folder'`,
-            fields: 'nextPageToken, files(id, name)',
-            spaces: 'drive',
-            pageToken: pageToken
+        fields: 'nextPageToken, files(id, name)',
+        spaces: 'drive',
+        orderBy: "name",
+        pageSize: 1000,
+        pageToken: pageToken
         }, function (err, res) {
             if (err) {
                 callback(err)
