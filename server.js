@@ -461,6 +461,27 @@ app.post('/admin-updateHourLog', async function(req, res) {
           res.send("Done!");
     })
 })   
+
+/* Crew Leader Numbers */
+app.post('/add-number', async function(req, res) {
+    req.on('data', async function(data) {
+        var obj = JSON.parse(data);
+        sheets.spreadsheets.values.append({
+            spreadsheetId: '15lWBZ58VuGYsP9DAxV54k0e3dSe9OCyfYFoArnLXil4',
+            range: 'Sheet1',
+            valueInputOption: 'RAW',
+            insertDataOption: 'INSERT_ROWS',
+            resource: {
+              values: [
+                [obj.name, obj.number.toString()]
+              ],
+            }
+          }, (err, response) => {})
+          res.send("Done!");
+    })
+})   
+
+
 /* Change spreadsheet to approved/denied for project entry */ 
 app.post('/admin-updateProject', async function(req, res) {
     req.on('data', async function(data) {
