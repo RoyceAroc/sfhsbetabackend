@@ -376,7 +376,7 @@ async function getAttendanceData() {
 }
 async function getNonSignatureServiceProjects(export_data) {
     const request = {
-        spreadsheetId: '1RfHIvm90vtwlswODlWyz4rB40Yc9OaXuzIQ9Zo5ao-o',
+        spreadsheetId: '1NImn-a5JzzzDDDZvvBZqJGIp2lQ4pswZC0KDtAR7WhM',
         ranges: [],
         includeGridData: true,
     };
@@ -585,7 +585,7 @@ app.post('/member-setup', async function(req, res) {
                 };
         
                 sheets.spreadsheets.values.batchGet({
-                    spreadsheetId: '1RfHIvm90vtwlswODlWyz4rB40Yc9OaXuzIQ9Zo5ao-o',
+                    spreadsheetId: '1NImn-a5JzzzDDDZvvBZqJGIp2lQ4pswZC0KDtAR7WhM',
                     ranges: 'Sheet1',
                   }, (err, result) => {
                     if (err) {
@@ -751,7 +751,7 @@ app.post('/member-setup', async function(req, res) {
 function addNonSignatureServiceProjectToSheet(userID, description, hours, minutes, relation) {
     let totalMins = parseInt(hours)*60 + (parseInt(minutes)*15) - 15; 
     sheets.spreadsheets.values.append({
-        spreadsheetId: '1RfHIvm90vtwlswODlWyz4rB40Yc9OaXuzIQ9Zo5ao-o',
+        spreadsheetId: '1NImn-a5JzzzDDDZvvBZqJGIp2lQ4pswZC0KDtAR7WhM',
         range: 'Sheet1',
         valueInputOption: 'RAW',
         insertDataOption: 'INSERT_ROWS',
@@ -777,7 +777,7 @@ try {
         let fileObject = req.file;
         let bufferStream = new stream.PassThrough();
         bufferStream.end(fileObject.buffer);
-        let semesterFolder = '1ODTr_awNB2GyPHzAScjzdiMrg63ecghl';
+        let semesterFolder = '1-fbVK58uZV4h77qIbhNph_S3tM6SIxnk';
         let folderID = "";
         var pageToken = null;
         async.doWhilst(function (callback) {
