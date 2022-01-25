@@ -580,10 +580,59 @@ app.post('/member-setup', async function(req, res) {
                             "status": '',
                             "pdf": '',
                             "note": ''
+                        },
+                        "make_up": {
+                            "total": 0,
+                            "missed_meetings": 0,
+                            "partial_hours": 0
                         }
                     }
                 };
         
+                sheets.spreadsheets.values.batchGet({
+                    spreadsheetId: '12u_tLlWnqvqWAmlP7CR0YrIZOE1osNGU8sG-jBQQhro',
+                    ranges: 'Seniors',
+                  }, (err, result) => {
+                    if (err) {
+                    } else {
+                        let table = result.data.valueRanges[0].values;
+                        for(let i=0; i<table.length; i++){
+                            if(table[i][2] == user_id) {
+                                if(table[i][3] != undefined) {
+                                    export_data.hourLog.make_up.partial_hours = table[i][3];
+                                }
+                                if(table[i][4] != undefined) {
+                                    export_data.hourLog.make_up.missed_meetings = table[i][4];
+                                }
+                                if(table[i][5] != undefined) {
+                                    export_data.hourLog.make_up.total = table[i][5];
+                                }
+                            }
+                        }
+                    }
+                });
+                sheets.spreadsheets.values.batchGet({
+                    spreadsheetId: '12u_tLlWnqvqWAmlP7CR0YrIZOE1osNGU8sG-jBQQhro',
+                    ranges: 'Juniors',
+                  }, (err, result) => {
+                    if (err) {
+                    } else {
+                        let table = result.data.valueRanges[0].values;
+                        for(let i=0; i<table.length; i++){
+                            if(table[i][2] == user_id) {
+                                if(table[i][3] != undefined) {
+                                    export_data.hourLog.make_up.partial_hours = table[i][3];
+                                }
+                                if(table[i][4] != undefined) {
+                                    export_data.hourLog.make_up.missed_meetings = table[i][4];
+                                }
+                                if(table[i][5] != undefined) {
+                                    export_data.hourLog.make_up.total = table[i][5];
+                                }
+                            }
+                        }
+                    }
+                });
                 sheets.spreadsheets.values.batchGet({
                     spreadsheetId: '1NImn-a5JzzzDDDZvvBZqJGIp2lQ4pswZC0KDtAR7WhM',
                     ranges: 'Sheet1',
