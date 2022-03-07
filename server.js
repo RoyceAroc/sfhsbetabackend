@@ -247,8 +247,12 @@ async function getGoogleUserInfo(access_token) {
 };
 
 app.get('/google-auth', async function(req, res) {
-    if (req.query.code != undefined) {
-        res.send("<script> window.location.href = \"" + await getAccessTokenFromCode(req.query.code) + "\";</script>");
+    try {
+        if (req.query.code != undefined) {
+            res.send("<script> window.location.href = \"" + await getAccessTokenFromCode(req.query.code) + "\";</script>");
+        }
+    } catch(e) {
+        res.send("Error!");
     }
 });
 
