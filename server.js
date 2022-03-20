@@ -269,7 +269,7 @@ app.post('/admin-data', function(req, res) {
 })
 
 async function getHourLogs(export_data) {
-    let semesterFolder = '1LWVSe5QfY6IZcTRiV55fNfl4qNFQvW0E';
+    let semesterFolder = '1Ui9EzQ8sh76P5MH5ndmeA34POz5nTqk1';
     let totalA = 0;
     var pageToken = null; 
     const res = await drive.files.list({
@@ -286,7 +286,7 @@ async function getHourLogs(export_data) {
 
 async function getHourStatus(export_data) {
     const request2 = {
-        spreadsheetId: '1_a7XFYtcvvK77H67o9gVY3m19jlQEBQ2cnxOJv99A9U',
+        spreadsheetId: '1GbSoT-CvmTUloHGp1TV_Cum8PLxiQG5vXOSE2936R1s',
         ranges: [],
         includeGridData: true,
     };
@@ -380,7 +380,7 @@ async function getAttendanceData() {
 }
 async function getNonSignatureServiceProjects(export_data) {
     const request = {
-        spreadsheetId: '1RfHIvm90vtwlswODlWyz4rB40Yc9OaXuzIQ9Zo5ao-o',
+        spreadsheetId: '1NImn-a5JzzzDDDZvvBZqJGIp2lQ4pswZC0KDtAR7WhM',
         ranges: [],
         includeGridData: true,
     };
@@ -452,7 +452,7 @@ app.post('/admin-updateHourLog', async function(req, res) {
             a = obj.user_id.toString();
         }
         sheets.spreadsheets.values.append({
-            spreadsheetId: '1_a7XFYtcvvK77H67o9gVY3m19jlQEBQ2cnxOJv99A9U',
+            spreadsheetId: '1GbSoT-CvmTUloHGp1TV_Cum8PLxiQG5vXOSE2936R1s',
             range: 'Sheet1',
             valueInputOption: 'RAW',
             insertDataOption: 'INSERT_ROWS',
@@ -492,7 +492,7 @@ app.post('/admin-updateProject', async function(req, res) {
         var obj = JSON.parse(data);
         // UPDATE SPREADSHEET FUNCTION
         const request = {
-            spreadsheetId: '1RfHIvm90vtwlswODlWyz4rB40Yc9OaXuzIQ9Zo5ao-o',
+            spreadsheetId: '1NImn-a5JzzzDDDZvvBZqJGIp2lQ4pswZC0KDtAR7WhM',
             ranges: [],
             includeGridData: true,
         };
@@ -507,7 +507,7 @@ app.post('/admin-updateProject', async function(req, res) {
                             let relation = data.sheets[i].data[0].rowData[j].values[3].formattedValue;
                             if (relation == obj.proj_relation) {
                                         sheets.spreadsheets.batchUpdate({
-                                            spreadsheetId: '1RfHIvm90vtwlswODlWyz4rB40Yc9OaXuzIQ9Zo5ao-o',
+                                            spreadsheetId: '1NImn-a5JzzzDDDZvvBZqJGIp2lQ4pswZC0KDtAR7WhM',
                                             resource: {
                                                 requests: [
                                                 {
@@ -531,7 +531,7 @@ app.post('/admin-updateProject', async function(req, res) {
                                             }
                                         });
                                         sheets.spreadsheets.batchUpdate({
-                                            spreadsheetId: '1RfHIvm90vtwlswODlWyz4rB40Yc9OaXuzIQ9Zo5ao-o',
+                                            spreadsheetId: '1NImn-a5JzzzDDDZvvBZqJGIp2lQ4pswZC0KDtAR7WhM',
                                             resource: {
                                                 requests: [
                                                 {
@@ -580,7 +580,7 @@ app.post('/member-setup', async function(req, res) {
                     },
                     "nonSignatureServiceProjects": [],
                     "hourLog": {
-                        "first_sem": {
+                        "second_sem": {
                             "status": '',
                             "pdf": '',
                             "note": ''
@@ -687,7 +687,7 @@ app.post('/member-setup', async function(req, res) {
                 }
 
                 
-                let semesterFolder = '1LWVSe5QfY6IZcTRiV55fNfl4qNFQvW0E';
+                let semesterFolder = '1Ui9EzQ8sh76P5MH5ndmeA34POz5nTqk1';
     let folderID = "";
     var pageToken = null;
     async.doWhilst(function (callback) {
@@ -727,11 +727,11 @@ app.post('/member-setup', async function(req, res) {
                     if (err) {
                     } else {
                         res.data.files.forEach(async function (file) {
-                            export_data.hourLog.first_sem.pdf= file.id;
+                            export_data.hourLog.second_sem.pdf= file.id;
                         });
                         
                         const request2 = {
-                            spreadsheetId: '1_a7XFYtcvvK77H67o9gVY3m19jlQEBQ2cnxOJv99A9U',
+                            spreadsheetId: '1GbSoT-CvmTUloHGp1TV_Cum8PLxiQG5vXOSE2936R1s',
                             ranges: [],
                             includeGridData: true,
                         };
@@ -749,8 +749,8 @@ app.post('/member-setup', async function(req, res) {
                                             let user_id = data.sheets[i].data[0].rowData[j].values[0].formattedValue;
                                             if (user_id == userID) {
                                                 // CHECK
-                                                export_data.hourLog.first_sem.status = data.sheets[i].data[0].rowData[j].values[1].formattedValue;
-                                                export_data.hourLog.first_sem.note = data.sheets[i].data[0].rowData[j].values[2].formattedValue;
+                                                export_data.hourLog.second_sem.status = data.sheets[i].data[0].rowData[j].values[1].formattedValue;
+                                                export_data.hourLog.second_sem.note = data.sheets[i].data[0].rowData[j].values[2].formattedValue;
                                                 
                                             } 
                                         } catch(e) {}    
@@ -758,10 +758,10 @@ app.post('/member-setup', async function(req, res) {
                                 } catch (e) {}
 
                             }
-                            if(export_data.hourLog.first_sem.status == "") {
+                            if(export_data.hourLog.second_sem.status == "") {
                                 
-                                export_data.hourLog.first_sem.status = "pending";
-                                export_data.hourLog.first_sem.note = "none";
+                                export_data.hourLog.second_sem.status = "pending";
+                                export_data.hourLog.second_sem.note = "none";
                                 
                             }
                         } catch (err) {
@@ -785,9 +785,9 @@ app.post('/member-setup', async function(req, res) {
 
            
         } else {
-            export_data.hourLog.first_sem.status = "none";
-            export_data.hourLog.first_sem.pdf = "none";
-            export_data.hourLog.first_sem.note = "none";
+            export_data.hourLog.second_sem.status = "none";
+            export_data.hourLog.second_sem.pdf = "none";
+            export_data.hourLog.second_sem.note = "none";
             res.send(export_data);
         }
 
@@ -1010,7 +1010,7 @@ try {
         let fileObject = req.file;
         let bufferStream = new stream.PassThrough();
         bufferStream.end(fileObject.buffer);
-        let semesterFolder = '1LWVSe5QfY6IZcTRiV55fNfl4qNFQvW0E';
+        let semesterFolder = '1Ui9EzQ8sh76P5MH5ndmeA34POz5nTqk1';
         let folderID = "";
         var pageToken = null;
         async.doWhilst(function (callback) {
