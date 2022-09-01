@@ -2,8 +2,8 @@
     {
         "init": 0,
         "type": "September",
-        "start": "2021-09-2",
-        "end": "2021-09-12",
+        "start": "2022-08-29",
+        "end": "2022-09-20",
         "questions": [
             {
                 "question": "How many hours are you required to complete this semester?",
@@ -33,155 +33,7 @@
                 "answer": 4
             }
         ],
-        "video_url": "https://dl.dropboxusercontent.com/s/bhm7jukwstrd2fm/fN2M3NjY0ZDZiNTgwNTVmMjgzNTFjZWM4ZjM2NDcwY2I.highres.mp4",
-        "slideshow_url": "https://docs.google.com/presentation/d/1DIRkIY9fV661gXTFEUvPg2KEMWt_Ux9pEBno7a_TkjE/edit?usp=sharing"
-    }, {
-        "init": 1,
-        "type": "October",
-        "start": "2021-10-6",
-        "end": "2021-10-18",
-        "questions": [
-            {
-                "question": "What's the SFHS Beta Club Website link?",
-                "time": 154,
-                "optionA": "southforsythbeta.com",
-                "optionB": "sfhsbeta.com",
-                "optionC": "southforsythhsbeta.com",
-                "optionD": "betasfhs.com",
-                "answer": 2
-            },
-            {
-                "question": "When will the Trunk or Treat take place?",
-                "time": 446,
-                "optionA": "October 27, 2021",
-                "optionB": "October 13, 2021",
-                "optionC": "November 27, 2021",
-                "optionD": "November 13, 2021",
-                "answer": 1
-            },
-            {
-                "question": "When will the Beta Convention Information Meeting take place?",
-                "time": 664,
-                "optionA": "Friday, October 29th from 3:45-4:30 PM",
-                "optionB": "Monday, October 18th from 3:45-4:30 PM",
-                "optionC": "Wednesday, October 13th from 3:45-4:30 PM",
-                "optionD": "Thursday, October 14th from 3:45-4:30 PM",
-                "answer": 4
-            }
-        ],
-        "video_url": "https://dl.dropboxusercontent.com/s/gb54thxq5gb6l5u/october.mp4",
-        "slideshow_url": "https://docs.google.com/presentation/d/1KIuMpD8v3BgpjxW7dQAhZHqqKMldnbOPJn3rI_fYkfM/edit?usp=sharing"
-    }, {
-        "init": 2,
-        "type": "November",
-        "start": "2021-11-1",
-        "end": "2021-11-24",
-        "questions": [
-            {
-                "question": "What email do you use to contact us if you have any questions or concerns?",
-                "time": 183,
-                "optionA": "southforsythbeta@gmail.com",
-                "optionB": "sfhsbeta@gmail.com",
-                "optionC": "southforsythhsbeta@gmail.com",
-                "optionD": "betasfhs@gmail.com",
-                "answer": 2
-            },
-            {
-                "question": "Which of the following is NOT true about the opportunity by Make-A-Wish?",
-                "time": 460,
-                "optionA": "You can get up to 4 hours for BETA club service from this opportunity",
-                "optionB": "A donation of 10 dollars is 2 hours service",
-                "optionC": "You can get up to 2 hours for BETA club service from this opportunity",
-                "optionD": "A donation of 5 dollars is 1 hour service",
-                "answer": 1
-            },
-            {
-                "question": "When is the application for Crew Leaders due?",
-                "time": 684,
-                "optionA": "November 30th, 2021",
-                "optionB": "November 15th, 2021",
-                "optionC": "November 19th, 2021",
-                "optionD": "November 12th, 2021",
-                "answer": 4
-            }
-        ],
-        "video_url": "https://dl.dropboxusercontent.com/s/m2c31ldzts59bwr/nov.mp4",
-        "slideshow_url": "https://docs.google.com/presentation/d/1ethYwX2osTwwvLyX1snTP6pZGtdZujEIO7mkx9lKNH0/edit?usp=sharing"
-    },  {
-        "init": 3,
-        "type": "December",
-        "start": "2021-12-1",
-        "end": "2021-12-19",
-        "questions": [
-            {
-                "question": "Who does NOT have to submit an hour log this semester?",
-                "time": 183,
-                "optionA": "New Members",
-                "optionB": "Returning Members",
-                "optionC": "Juniors",
-                "optionD": "Seniors",
-                "answer": 1
-            },
-            {
-                "question": "When is the deadline to submit scientific calculators for the NGF Drive?",
-                "time": 439,
-                "optionA": "December 25th",
-                "optionB": "December 29th",
-                "optionC": "December 19th",
-                "optionD": "December 17th",
-                "answer": 4
-            },
-            {
-                "question": "What email do you use to reach out to us about any questions?",
-                "time": 873,
-                "optionA": "southforsythbeta@gmail.com",
-                "optionB": "sfhsbeta@gmail.com",
-                "optionC": "sfhsbetaclub@gmail.com",
-                "optionD": "southforsythbetaclub@gmail.com",
-                "answer": 2
-            }
-        ],
-        "video_url": "https://dl.dropboxusercontent.com/s/6sbhk5f7kywm03q/MmI5OTQ4MzM3NzgxNDk0YTQwZTVhYzVhYjExZmQxNDY.highres.mp4",
-        "slideshow_url": "https://docs.google.com/presentation/d/1nRK_nPM77UDdmcG70omjjeeJZMXEKS3qB9LmgoO5fJk/edit?usp=sharing"
-    }, {
-        "init": 4,
-        "type": "January",
-        "start": "2022-1-1",
-        "end": "2021-1-18",
-        "questions": [
-            
-        ],
-        "video_url": "https://dl.dropboxusercontent.com/s/sg2eix2g5l7rnbr/video.mp4",
-        "slideshow_url": "https://docs.google.com/presentation/d/14Fc8isVo-eBX_lUiusAmxNwbyiJmBLz-Xo8gy1kmSY4/edit?usp=sharing"
-    }, {
-        "init": 5,
-        "type": "February",
-        "start": "2022-2-2",
-        "end": "2022-2-25",
-        "questions": [
-            
-        ],
-        "video_url": "https://dl.dropboxusercontent.com/s/1814tuuqr23pk5h/february.mp4",
-        "slideshow_url": "https://docs.google.com/presentation/d/1blQoLrIPxXFZSTKLkmMoPVcuFhUWANFHO5ZjxDdcJg4/edit?usp=sharing"
-    }, {
-        "init": 6,
-        "type": "March",
-        "start": "2022-3-1",
-        "end": "2022-3-25",
-        "questions": [
-            
-        ],
-        "video_url": "https://dl.dropboxusercontent.com/s/8e854dqjs2gfzv2/MTJhOTYxMmFiNmFmZmJmZmMyZTBjNjQ3YjQ5ZTI3NTY.highres.mp4",
-        "slideshow_url": "https://docs.google.com/presentation/d/1gOIFAxMln4T-UVc_hG7w48AIA-BrPKDGKQQ5lTruLgY/edit?usp=sharing"
-    }, {
-        "init": 7,
-        "type": "April",
-        "start": "2022-4-12",
-        "end": "2022-4-30",
-        "questions": [
-            
-        ],
-        "video_url": "https://dl.dropboxusercontent.com/s/jackrelxkpq3n3k/MzhjMjNlZTY2OTBhNTk1OTkwNjIwMmU1ZGZjZTQxMTk.highres.mp4",
-        "slideshow_url": "https://docs.google.com/presentation/d/1juDuliR2rsUl-ezHExygoxiesjeYstRi1sw1HFmIoSg/edit?usp=sharing"
+        "video_url": "https://dl.dropboxusercontent.com/s/w4ku7on4vvph48p/September%202022%20Meeting.mp4",
+        "slideshow_url": "https://docs.google.com/presentation/d/15N0mok11R2THjg5ZE1s3OaRBx7IIQPgtJ-F8GYt57Vc/edit?usp=sharing"
     }
 ]

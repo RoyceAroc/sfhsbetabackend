@@ -190,7 +190,7 @@ async function checkIfCurrentMember(id, name) {
 
 async function checkAttendanceStatus(id, num) {
     const request = {
-        spreadsheetId: '1SzTrrUvB-viMYahRFTiv1RjJLzP88tvBYMI_5QMabJE',
+        spreadsheetId: '12i3KlpVPkJaqXD5l9VHmjrxqCp68OtmUf9K3M_zy_2A',
         ranges: [],
         includeGridData: true,
     };
@@ -219,6 +219,31 @@ async function checkAttendanceStatus(id, num) {
     }
 }
 
+// 8/30/22 - New Function
+async function getMakeUpHours(id) {
+    const request = {
+        spreadsheetId: '12i3KlpVPkJaqXD5l9VHmjrxqCp68OtmUf9K3M_zy_2A',
+        ranges: [],
+        includeGridData: true,
+    };
+    try {
+        const response = (await sheets.spreadsheets.get(request)).data;
+        let data = JSON.parse(JSON.stringify(response, null, 2));
+        for (let i = 0; i < 3; ++i) {
+            try {
+                for (let j = 0; j < data.sheets[i].properties.gridProperties.rowCount; ++j) {
+                    let user_id = data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.stringValue;
+                    if (user_id == id) { 
+                        return data.sheets[i].data[0].rowData[j].values[11].userEnteredValue.numberValue;
+                    }
+                }
+            } catch (e) {}
+        }
+        return "error";
+    } catch (err) {
+        return "error";
+    }
+}
 
 
 async function getGoogleUserInfo(access_token) {
@@ -579,66 +604,13 @@ app.post('/member-setup', async function(req, res) {
                         "current_attendance": []
                     },
                     "nonSignatureServiceProjects": [],
-                    "hourLog": {
-                        "second_sem": {
-                            "status": '',
-                            "pdf": '',
-                            "note": ''
-                        },
-                        "make_up": {
-                            "total": 0,
-                            "missed_meetings": 0,
-                            "partial_hours": 0
-                        }
-                    }
+                    "serviceProjectSubmissions": [],
+                    "makeUpHours": await getMakeUpHours(user_id)
                 };
         
+               // Service Project Submissions
                 sheets.spreadsheets.values.batchGet({
-                    spreadsheetId: '12u_tLlWnqvqWAmlP7CR0YrIZOE1osNGU8sG-jBQQhro',
-                    ranges: 'Seniors',
-                  }, (err, result) => {
-                    if (err) {
-                    } else {
-                        let table = result.data.valueRanges[0].values;
-                        for(let i=0; i<table.length; i++){
-                            if(table[i][2] == user_id) {
-                                if(table[i][3] != undefined) {
-                                    export_data.hourLog.make_up.partial_hours = table[i][3];
-                                }
-                                if(table[i][4] != undefined) {
-                                    export_data.hourLog.make_up.missed_meetings = table[i][4];
-                                }
-                                if(table[i][5] != undefined) {
-                                    export_data.hourLog.make_up.total = table[i][5];
-                                }
-                            }
-                        }
-                    }
-                });
-                sheets.spreadsheets.values.batchGet({
-                    spreadsheetId: '12u_tLlWnqvqWAmlP7CR0YrIZOE1osNGU8sG-jBQQhro',
-                    ranges: 'Juniors',
-                  }, (err, result) => {
-                    if (err) {
-                    } else {
-                        let table = result.data.valueRanges[0].values;
-                        for(let i=0; i<table.length; i++){
-                            if(table[i][2] == user_id) {
-                                if(table[i][3] != undefined) {
-                                    export_data.hourLog.make_up.partial_hours = table[i][3];
-                                }
-                                if(table[i][4] != undefined) {
-                                    export_data.hourLog.make_up.missed_meetings = table[i][4];
-                                }
-                                if(table[i][5] != undefined) {
-                                    export_data.hourLog.make_up.total = table[i][5];
-                                }
-                            }
-                        }
-                    }
-                });
-                sheets.spreadsheets.values.batchGet({
-                    spreadsheetId: '1NImn-a5JzzzDDDZvvBZqJGIp2lQ4pswZC0KDtAR7WhM',
+                    spreadsheetId: '1jUov3v9zWpxO4V0vwq53x7SLcPtOb6lrV5VCOc6i0pw',
                     ranges: 'Sheet1',
                   }, (err, result) => {
                     if (err) {
@@ -659,6 +631,7 @@ app.post('/member-setup', async function(req, res) {
                     }
                 });
         
+                // Meetings
                 const meeting_data = JSON.parse(fs.readFileSync('meetings.json', 'utf8'));
                 for(let i=0; i<meeting_data.length; i++) {
                     if(new Date(meeting_data[i].end) <= new Date()) {
@@ -686,117 +659,7 @@ app.post('/member-setup', async function(req, res) {
                     }
                 }
 
-                
-                let semesterFolder = '1Ui9EzQ8sh76P5MH5ndmeA34POz5nTqk1';
-    let folderID = "";
-    var pageToken = null;
-    async.doWhilst(function (callback) {
-        drive.files.list({
-            q: `'${semesterFolder}' in parents and mimeType = 'application/vnd.google-apps.folder'`,
-        fields: 'nextPageToken, files(id, name)',
-        spaces: 'drive',
-        orderBy: "name",
-        pageSize: 1000,
-        pageToken: pageToken
-        }, function (err, res) {
-            if (err) {
-                callback(err)
-            } else {
-                res.data.files.forEach(function (file) {
-                    if(file.name == userID) {
-                        folderID = file.id;
-                    }
-                });
-                pageToken = res.nextPageToken;
-                callback();
-            }
-        });
-    },  function () {
-    
-
-        if(folderID != "") {
-            let libCount = 0;
-            var pageToken = null;
-            async.doWhilst(async function (callback) {
-                drive.files.list({
-                    q: `'${folderID}' in parents`,
-                    fields: 'nextPageToken, files(id, name)',
-                    spaces: 'drive',
-                    pageToken: pageToken
-                }, async function (err, res) {
-                    if (err) {
-                    } else {
-                        res.data.files.forEach(async function (file) {
-                            export_data.hourLog.second_sem.pdf= file.id;
-                        });
-                        
-                        const request2 = {
-                            spreadsheetId: '1GbSoT-CvmTUloHGp1TV_Cum8PLxiQG5vXOSE2936R1s',
-                            ranges: [],
-                            includeGridData: true,
-                        };
-                        
-                        try {
-                            let j=0;
-                            const response2 = (await sheets.spreadsheets.get(request2)).data;
-                            
-                            let data = JSON.parse(JSON.stringify(response2, null, 2));
-                           
-                            for (let i = 0; i < 1; i++) {
-                                try {
-                                    for (j = 0; j < data.sheets[i].properties.gridProperties.rowCount; j++) {
-                                        try {
-                                            let user_id = data.sheets[i].data[0].rowData[j].values[0].formattedValue;
-                                            if (user_id == userID) {
-                                                // CHECK
-                                                export_data.hourLog.second_sem.status = data.sheets[i].data[0].rowData[j].values[1].formattedValue;
-                                                export_data.hourLog.second_sem.note = data.sheets[i].data[0].rowData[j].values[2].formattedValue;
-                                                
-                                            } 
-                                        } catch(e) {}    
-                                    }
-                                } catch (e) {}
-
-                            }
-                            if(export_data.hourLog.second_sem.status == "") {
-                                
-                                export_data.hourLog.second_sem.status = "pending";
-                                export_data.hourLog.second_sem.note = "none";
-                                
-                            }
-                        } catch (err) {
-                        }
-                        
-                        pageToken = res.nextPageToken;
-                        callback();
-
-                        
-                    }
-                    
-                });
-                
-            }, function () {
-                res.send(export_data);
-               return !!pageToken;
-            }, function (err) {
-                if (err) {
-                } 
-            })
-
-           
-        } else {
-            export_data.hourLog.second_sem.status = "none";
-            export_data.hourLog.second_sem.pdf = "none";
-            export_data.hourLog.second_sem.note = "none";
-            res.send(export_data);
-        }
-
-
-
-    }, async function (err) {
-
-    })
-                
+           res.send(export_data);     
     })
     
 })
@@ -804,7 +667,7 @@ app.post('/member-setup', async function(req, res) {
 function addNonSignatureServiceProjectToSheet(userID, description, hours, minutes, relation) {
     let totalMins = parseInt(hours)*60 + (parseInt(minutes)*15) - 15; 
     sheets.spreadsheets.values.append({
-        spreadsheetId: '1NImn-a5JzzzDDDZvvBZqJGIp2lQ4pswZC0KDtAR7WhM',
+        spreadsheetId: '1jUov3v9zWpxO4V0vwq53x7SLcPtOb6lrV5VCOc6i0pw',
         range: 'Sheet1',
         valueInputOption: 'RAW',
         insertDataOption: 'INSERT_ROWS',
@@ -819,18 +682,18 @@ function addNonSignatureServiceProjectToSheet(userID, description, hours, minute
 try {
     const upload = multer({
         limits: {
-          fileSize: 8 * 1024 * 1024, // 4 MB storage
+          fileSize: 8 * 1024 * 1024, // 8 MB storage
         },
         storage: multer.memoryStorage()
     });
     
-    app.post('/submitNonSignatureServiceProject', upload.single('document_file'), async function(req, res) {
+    app.post('/submitServiceProjectSubmission', upload.single('document_file'), async function(req, res) {
         let userID = req.body.userID.toString().replace('@forsythk12.org', '');
         let stream = require('stream');
         let fileObject = req.file;
         let bufferStream = new stream.PassThrough();
         bufferStream.end(fileObject.buffer);
-        let semesterFolder = '1-fbVK58uZV4h77qIbhNph_S3tM6SIxnk';
+        let semesterFolder = '1tAeFabgK1UDXjQh2s6igtsSZ-bdijTH5';
         let folderID = "";
         var pageToken = null;
         async.doWhilst(function (callback) {
@@ -1155,9 +1018,9 @@ app.post('/checkAttendanceForMonth', async function(req, res) {
     let uid = obj.userID.toString().replace('@forsythk12.org', '');
     let present = obj.present;
     let init = obj.init;
-    let spreadsheetId = "1SzTrrUvB-viMYahRFTiv1RjJLzP88tvBYMI_5QMabJE";  
+    let spreadsheetId = "12i3KlpVPkJaqXD5l9VHmjrxqCp68OtmUf9K3M_zy_2A";  
     const request = {
-        spreadsheetId: "1SzTrrUvB-viMYahRFTiv1RjJLzP88tvBYMI_5QMabJE",
+        spreadsheetId: "12i3KlpVPkJaqXD5l9VHmjrxqCp68OtmUf9K3M_zy_2A",
         ranges: [],
         includeGridData: true,
     };
@@ -1173,9 +1036,9 @@ app.post('/checkAttendanceForMonth', async function(req, res) {
                         if(i == 0) {
                             subsheet = "0";
                         } else if(i==1) {
-                            subsheet = "948233976";
+                            subsheet = "1200155045";
                         } else {
-                            subsheet = "1035860937"
+                            subsheet = "2108728740"
                         }   
                         if(present) {
                             batchUpdateRequest = {
