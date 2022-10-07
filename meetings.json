@@ -35,5 +35,42 @@
         ],
         "video_url": "https://dl.dropboxusercontent.com/s/w4ku7on4vvph48p/September%202022%20Meeting.mp4",
         "slideshow_url": "https://docs.google.com/presentation/d/15N0mok11R2THjg5ZE1s3OaRBx7IIQPgtJ-F8GYt57Vc/edit?usp=sharing"
+    },
+    {
+        "init": 1,
+        "type": "October",
+        "start": "2022-10-03",
+        "end": "2022-10-20",
+        "questions": [
+            {
+                "question": "How many hours are you required to complete this semester?",
+                "time": 157,
+                "optionA": "5 hours",
+                "optionB": "7 hours",
+                "optionC": "10 hours",
+                "optionD": "15 hours",
+                "answer": 2
+            },
+            {
+                "question": "Which of the following is NOT true about the Breast Cancer Chemo Kit Drive?",
+                "time": 476,
+                "optionA": "Maximum of two service hours",
+                "optionB": "One bag is equal to one service hour",
+                "optionC": "Drive will be held from September 7 - October 21",
+                "optionD": "Proof of donation must be submitted on the Non-Signature Service Project form",
+                "answer": 1
+            },
+            {
+                "question": "If you have any questions or concerns, what platform(s) can you use to react out to us?",
+                "time": 831,
+                "optionA": "Remind101",
+                "optionB": "Email (sfhsbeta@gmail.com)",
+                "optionC": "Instagram (@sfhsbeta)",
+                "optionD": "All of the above",
+                "answer": 4
+            }
+        ],
+        "video_url": "https://dl.dropboxusercontent.com/s/cnstwe3nk4rlgac/October%20Meeting.mp4",
+        "slideshow_url": "https://docs.google.com/presentation/d/1RbblqDk9V2EQw2RY16DsATMSSvZTGtSbaTmSKL_Q7q8/edit?usp=sharing"
     }
 ]
