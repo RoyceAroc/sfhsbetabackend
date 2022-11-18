@@ -128,7 +128,7 @@ async function getAccessTokenFromCode(code) {
 
 async function checkIfCurrentMember(id, name) {
     const request = {
-        spreadsheetId: '12i3KlpVPkJaqXD5l9VHmjrxqCp68OtmUf9K3M_zy_2A',
+        spreadsheetId: '12i3KlpVPkJaqXD5l9VHmjrxqCp68OtmUf9K3My_zy_2A',
         ranges: [],
         includeGridData: true,
     };
@@ -151,7 +151,7 @@ async function checkIfCurrentMember(id, name) {
                                     let sheetID = 0;
                                     if(i==1) {sheetID = 1200155045;} else if(i==2){sheetID = 2108728740;}
                                         sheets.spreadsheets.batchUpdate({
-                                            spreadsheetId: '1SzTrrUvB-viMYahRFTiv1RjJLzP88tvBYMI_5QMabJE',
+                                            spreadsheetId: '12i3KlpVPkJaqXD5l9VHmjrxqCp68OtmUf9K3My_zy_2A',
                                             resource: {
                                                 requests: [
                                                 {
