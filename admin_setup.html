@@ -133,6 +133,34 @@ main {
 </form>
 </div>
 
+<div id="editVoluOP" style="display: none;border:3px solid black; padding: 50px;z-index: 10000; background-color: white; width: 90%; height: 90%; position: fixed; left: 5%; top: 5%; overflow-y: auto; height: 90%;">
+ 
+ <a style="text-align: center;" href="javascript:closeEditVolunteeringOpportunity()">Close this modal</a>
+<br><br>
+ <select id="editOp">
+</select><br>
+Title: <br>
+<textarea id="op1"></textarea><br>
+Description: <br>
+<section id="op2" style="border: 1px solid rgb(224, 221, 221); border-radius: 3px;padding: 10px;" contenteditable="true">
+</section><br>
+
+<b> Old Link buttons: </b><br>
+<p id="oldOP"></p>
+<section id="op3" style="border: 1px solid rgb(224, 221, 221); border-radius: 3px;padding: 10px;" contenteditable="true">
+  <ul>
+    <li>![Link Title here](Link to resource here) </li>
+</ul>
+  </section>
+<div style="text-align: center; margin-top: 10px;">
+  <button onclick="updateVOP()" class="btn btn-lg px-4 me-sm-3" style="background-color:#FFD700"> Update Volunteering Opportunity</button>
+</div>
+<div style="text-align: center; margin-top: 10px;">
+  <button  onclick="deleteVOP()" class="btn btn-lg px-4 me-sm-3" style="background-color:#FFD700">Delete Volunteering Opportunity</button>
+</div>
+
+
+</div>
 
 <div style=" left: 300px; position: fixed; overflow-y:auto; padding: 20px; height: 90vh;"> 
 
@@ -169,7 +197,7 @@ main {
     <hr></hr>
     <a href="javascript:showCreateVolunteeringOpportunity()">Click here to create a volunteering opportunity!</a>
     <br><br>
-    <i> If you have any problems or concerns, contact me at royceaden@gmail.com </i>
+    <a href="javascript:showEditVolunteeringOpportunity()">Click here to update/delete a volunteering opportunity!</a>
   <!--  <h3>Edit Volunteering Opportunities (Feature Coming Soon - Contact Royce to change anything until the feature is available)</h3>-->
     <!--<div  class="container">
       <div class="row">

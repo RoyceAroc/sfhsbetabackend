@@ -939,7 +939,6 @@ app.get('*', function(req, res) {
 
 
 
-
 app.listen(port, () => {});
 
 
@@ -1055,6 +1054,16 @@ app.post('/checkAttendanceForMonth', async function(req, res) {
     });
 });
 
+function makeid(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
 try {
     const upload = multer({
         limits: {
@@ -1078,7 +1087,8 @@ try {
             .then(res => res.json())
             .then((json) => {
                 let a = json;
-                let sub = {title: req.body.title_volunteeringOP, body: req.body.description_volunteeringOP, image: a.length+".JPG", links:[]};
+                let z = makeid(10);
+                let sub = {title: req.body.title_volunteeringOP, body: req.body.description_volunteeringOP, image: z+".JPG", links:[]};
                 let linkString = req.body.links_volunteeringOP;
                 for(let i=0; i<(linkString.match(/<li>/g) || []).length+1; i++) {
                     let a = linkString.indexOf("<li>");
@@ -1101,7 +1111,7 @@ try {
                     linkString = linkString.replace(linkString.substring(a, b+5), "");
                 }
                 a.push(sub);
-                let z = (a.length)-1;
+             
                 ghrepo.createContents('web/data/content/media/client/volunteering/' + z + '.JPG', 'Added Image for Volunteering Opportunity', fileObject.buffer, 'main', function(err, data, headers) {
                     ghrepo.contents('web/data/content/files/volunteeringOpportunities.json', function(err, data, headers) {
                         ghrepo.updateContents('web/data/content/files/volunteeringOpportunities.json', 'Added Volunteering Opportunity', JSON.stringify(a), data.sha, 'main',  function(err, data, headers) {
@@ -1113,3 +1123,81 @@ try {
             });
     });
 } catch(e) {res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html?error=504` + "\";</script>");}
+
+
+app.post('/updateVOP', async function(req, res) {
+    req.on('data', async function (data) {
+			var obj = JSON.parse(data);
+          
+            let urlA = "https://raw.githubusercontent.com/RoyceAroc/sfhsbeta.com/main/web/data/content/files/volunteeringOpportunities.json";
+    
+            let settings = { method: "Get" };
+            
+            fetch(urlA, settings)
+                .then(res => res.json())
+                .then((json) => {
+                    let a = json;
+                    delete a[obj.value];
+                    let sub = {title: obj.title, body: obj.description, image: obj.image, links:[]};
+                    let linkString = obj.links;
+                    for(let i=0; i<(linkString.match(/<li>/g) || []).length+1; i++) {
+                        let a = linkString.indexOf("<li>");
+                        let b = linkString.indexOf("</li>");
+                        let c = linkString.substring(a,b);
+                        let d = c.indexOf("![");
+                        let e = c.indexOf("](");
+                        let f = c.substring(d+2,e); //Link Title
+                        let g = 1;
+                        for(let m=c.length; m>0; m--) {
+                            if(c[m] == ")") {
+                                g = m;
+                                break;
+                            }
+                        }
+                        let h = c.substring(e+2, g); // Link
+                        let k = {title:f, href:h};
+                        sub.links.push(k);
+                        k = {};
+                        linkString = linkString.replace(linkString.substring(a, b+5), "");
+                    }
+        
+                    a.push(sub);
+
+                    
+                 
+                        ghrepo.contents('web/data/content/files/volunteeringOpportunities.json', function(err, data, headers) {
+                            ghrepo.updateContents('web/data/content/files/volunteeringOpportunities.json', 'Updated Volunteering Opportunity', JSON.stringify(a), data.sha, 'main',  function(err, data, headers) {
+                                res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html` + "\";</script>");
+                            });
+                            });
+                   
+        
+                });
+    });
+});
+
+
+app.post('/deleteVOP', async function(req, res) {
+    req.on('data', async function (data) {
+			var obj = JSON.parse(data);
+          
+            let urlA = "https://raw.githubusercontent.com/RoyceAroc/sfhsbeta.com/main/web/data/content/files/volunteeringOpportunities.json";
+    
+            let settings = { method: "Get" };
+            
+            fetch(urlA, settings)
+                .then(res => res.json())
+                .then((json) => {
+                    let a = json;
+                    delete a[obj.value];
+
+                        ghrepo.contents('web/data/content/files/volunteeringOpportunities.json', function(err, data, headers) {
+                            ghrepo.updateContents('web/data/content/files/volunteeringOpportunities.json', 'Deleted Volunteering Opportunity', JSON.stringify(a), data.sha, 'main',  function(err, data, headers) {
+                                res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html` + "\";</script>");
+                            });
+                            });
+                   
+        
+                });
+    });
+});
