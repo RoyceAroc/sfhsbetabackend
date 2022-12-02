@@ -58,7 +58,7 @@ if(testing) {
     var serverLink = 'http://localhost:3000';
     var redirectLink = 'http://localhost:5501';
 } else {
-    var serverLink = 'https://sfhsbeta.herokuapp.com';
+    var serverLink = 'https://sfhsbeta2.herokuapp.com';
     var redirectLink = 'https://sfhsbeta.com';
 }
 
