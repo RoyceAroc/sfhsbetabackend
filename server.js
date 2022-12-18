@@ -220,7 +220,7 @@ async function checkAttendanceStatus(id, num) {
 }
 
 // 8/30/22 - New Function
-async function getMakeUpHours(id) {
+async function getHourStatus(id) {
     const request = {
         spreadsheetId: '12i3KlpVPkJaqXD5l9VHmjrxqCp68OtmUf9K3M_zy_2A',
         ranges: [],
@@ -234,7 +234,12 @@ async function getMakeUpHours(id) {
                 for (let j = 0; j < data.sheets[i].properties.gridProperties.rowCount; ++j) {
                     let user_id = data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.stringValue;
                     if (user_id == id) { 
-                        return data.sheets[i].data[0].rowData[j].values[11].userEnteredValue.numberValue;
+                        let da = {"fall_attendance":1,"make_up": 2, "fall_hours": 3, "fall_status": 4}
+                        da.make_up = data.sheets[i].data[0].rowData[j].values[11].userEnteredValue.numberValue;
+                        da.fall_hours = data.sheets[i].data[0].rowData[j].values[12].userEnteredValue.numberValue;
+                        da.fall_attendance = data.sheets[i].data[0].rowData[j].values[13].userEnteredValue.numberValue;
+                        da.fall_status = data.sheets[i].data[0].rowData[j].values[14].userEnteredValue.numberValue;
+                        return da;             
                     }
                 }
             } catch (e) {}
@@ -537,7 +542,7 @@ app.post('/member-setup', async function(req, res) {
                     },
                     "nonSignatureServiceProjects": [],
                     "serviceProjectSubmissions": [],
-                    "makeUpHours": await getMakeUpHours(user_id)
+                    "hourStatus": await getHourStatus(user_id)
                 };
         
                // Service Project Submissions
