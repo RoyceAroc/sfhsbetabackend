@@ -58,7 +58,7 @@ if(testing) {
     var serverLink = 'http://localhost:3000';
     var redirectLink = 'http://localhost:5501';
 } else {
-    var serverLink = 'https://repulsive-hare-petticoat.cyclic.app/';
+    var serverLink = 'https://repulsive-hare-petticoat.cyclic.app';
     var redirectLink = 'https://sfhsbeta.com';
 }
 
