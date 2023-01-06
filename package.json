@@ -2,7 +2,7 @@
   "name": "BetaBackend",
   "version": "1.0.0",
   "description": "Project",
-  "main": "index.js",
+  "main": "server.js",
   "dependencies": {
     "axios": "^0.21.1",
     "cors": "^2.8.5",
