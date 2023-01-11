@@ -30,7 +30,7 @@ const { jobs } = require('googleapis/build/src/apis/jobs');
 const admin = 'N$nieiu9BN@Nkjsui@JJUhBhUHijJH';
 var github = require('octonode');
 
-var client = github.client('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');
+var client = github.client('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');
 var ghrepo = client.repo('RoyceAroc/sfhsbeta.com');
 
 /* Google drive api */
