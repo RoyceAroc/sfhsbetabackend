@@ -30,7 +30,7 @@ const { jobs } = require('googleapis/build/src/apis/jobs');
 const admin = 'N$nieiu9BN@Nkjsui@JJUhBhUHijJH';
 var github = require('octonode');
 
-var client = github.client('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');
+var client = github.client('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');
 var ghrepo = client.repo('RoyceAroc/sfhsbeta.com');
 
 /* Google drive api */
@@ -1118,8 +1118,8 @@ try {
                 a.push(sub);
              
                 ghrepo.createContents('web/data/content/media/client/volunteering/' + z + '.JPG', 'Added Image for Volunteering Opportunity', fileObject.buffer, 'main', function(err, data, headers) {
-                    ghrepo.contents('web/data/content/files/volunteeringOpportunities.json', function(err, dataB, headers) {
-                        ghrepo.updateContents('web/data/content/files/volunteeringOpportunities.json', 'Added Volunteering Opportunity', JSON.stringify(a), dataB.sha, 'main',  function(err, data, headers) {
+                    ghrepo.contents('web/data/content/files/volunteeringOpportunities.json', function(err, data, headers) {
+                        ghrepo.updateContents('web/data/content/files/volunteeringOpportunities.json', 'Added Volunteering Opportunity', JSON.stringify(a), data.sha, 'main',  function(err, data, headers) {
                             res.send("<script> window.location.href = \"" + `${redirectLink}/dashboard.html` + "\";</script>");
                         });
                         });
