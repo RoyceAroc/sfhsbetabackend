@@ -342,7 +342,7 @@ async function getAttendanceData() {
 }
 async function getServiceProjects(export_data) {
     const request = {
-        spreadsheetId: '1jUov3v9zWpxO4V0vwq53x7SLcPtOb6lrV5VCOc6i0pw',
+        spreadsheetId: '19QqH3BVT9s96nFrOpxvInrleuupGCKfNDxTHiZmqIM0',
         ranges: [],
         includeGridData: true,
     };
@@ -454,7 +454,7 @@ app.post('/admin-updateProject', async function(req, res) {
         var obj = JSON.parse(data);
         // UPDATE SPREADSHEET FUNCTION
         const request = {
-            spreadsheetId: '1jUov3v9zWpxO4V0vwq53x7SLcPtOb6lrV5VCOc6i0pw',
+            spreadsheetId: '19QqH3BVT9s96nFrOpxvInrleuupGCKfNDxTHiZmqIM0',
             ranges: [],
             includeGridData: true,
         };
@@ -469,7 +469,7 @@ app.post('/admin-updateProject', async function(req, res) {
                             let relation = data.sheets[i].data[0].rowData[j].values[3].formattedValue;
                             if (relation == obj.proj_relation) {
                                         sheets.spreadsheets.batchUpdate({
-                                            spreadsheetId: '1jUov3v9zWpxO4V0vwq53x7SLcPtOb6lrV5VCOc6i0pw',
+                                            spreadsheetId: '19QqH3BVT9s96nFrOpxvInrleuupGCKfNDxTHiZmqIM0',
                                             resource: {
                                                 requests: [
                                                 {
@@ -493,7 +493,7 @@ app.post('/admin-updateProject', async function(req, res) {
                                             }
                                         });
                                         sheets.spreadsheets.batchUpdate({
-                                            spreadsheetId: '1jUov3v9zWpxO4V0vwq53x7SLcPtOb6lrV5VCOc6i0pw',
+                                            spreadsheetId: '19QqH3BVT9s96nFrOpxvInrleuupGCKfNDxTHiZmqIM0',
                                             resource: {
                                                 requests: [
                                                 {
@@ -547,7 +547,7 @@ app.post('/member-setup', async function(req, res) {
         
                // Service Project Submissions
                 sheets.spreadsheets.values.batchGet({
-                    spreadsheetId: '1jUov3v9zWpxO4V0vwq53x7SLcPtOb6lrV5VCOc6i0pw',
+                    spreadsheetId: '19QqH3BVT9s96nFrOpxvInrleuupGCKfNDxTHiZmqIM0',
                     ranges: 'Sheet1',
                   }, (err, result) => {
                     if (err) {
@@ -604,7 +604,7 @@ app.post('/member-setup', async function(req, res) {
 function addNonSignatureServiceProjectToSheet(userID, description, hours, minutes, relation) {
     let totalMins = parseInt(hours)*60 + (parseInt(minutes)*15) - 15; 
     sheets.spreadsheets.values.append({
-        spreadsheetId: '1jUov3v9zWpxO4V0vwq53x7SLcPtOb6lrV5VCOc6i0pw',
+        spreadsheetId: '19QqH3BVT9s96nFrOpxvInrleuupGCKfNDxTHiZmqIM0',
         range: 'Sheet1',
         valueInputOption: 'RAW',
         insertDataOption: 'INSERT_ROWS',
@@ -630,7 +630,7 @@ try {
         let fileObject = req.file;
         let bufferStream = new stream.PassThrough();
         bufferStream.end(fileObject.buffer);
-        let semesterFolder = '1tAeFabgK1UDXjQh2s6igtsSZ-bdijTH5';
+        let semesterFolder = '1RTaX7PBV_HGzPBZbfjvtLglIoaZoluVO';
         let folderID = "";
         var pageToken = null;
         async.doWhilst(function (callback) {
