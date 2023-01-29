@@ -53,7 +53,7 @@ const sheets = google.sheets({
 });
 
 /** Deployment process */
-var testing = false; // Set to false if deploying
+var testing =  false; // Set to false if deploying
 if(testing) {
     var serverLink = 'http://localhost:3000';
     var redirectLink = 'http://localhost:5501';
@@ -312,7 +312,7 @@ async function getAttendanceData() {
         const response = (await sheets.spreadsheets.get(request)).data;
         let data = JSON.parse(JSON.stringify(response, null, 2));
 
-        for (let i = 0; i < 2; ++i) {
+        for (let i = 0; i < 3; ++i) {
             try {
                 for (let j = 1; j <= data.sheets[i].properties.gridProperties.rowCount; ++j) {
                     var sub_template = {
