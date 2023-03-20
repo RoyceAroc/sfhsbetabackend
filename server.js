@@ -234,11 +234,60 @@ async function getHourStatus(id) {
                 for (let j = 0; j < data.sheets[i].properties.gridProperties.rowCount; ++j) {
                     let user_id = data.sheets[i].data[0].rowData[j].values[2].userEnteredValue.stringValue;
                     if (user_id == id) { 
-                        let da = {"fall_attendance":1,"make_up": 2, "fall_hours": 3, "fall_status": 4}
+                        let da = {"fall_attendance":1,"make_up": 2, "fall_hours": 3, "fall_status": 4, "spring_attendance": -1, "spring_hours": -1, "grade": "u"}
                         da.make_up = data.sheets[i].data[0].rowData[j].values[11].userEnteredValue.numberValue;
                         da.fall_hours = data.sheets[i].data[0].rowData[j].values[12].userEnteredValue.numberValue;
                         da.fall_attendance = data.sheets[i].data[0].rowData[j].values[13].userEnteredValue.numberValue;
                         da.fall_status = data.sheets[i].data[0].rowData[j].values[14].userEnteredValue.numberValue;
+
+                        if(i==0) {
+                            // Get Senior Hour Status;
+                            let makeup_attendance = 0;
+                            let aa = data.sheets[i].data[0].rowData[j].values[7].userEnteredFormat.backgroundColor;
+                            let bb = data.sheets[i].data[0].rowData[j].values[8].userEnteredFormat.backgroundColor;
+                            let cc = data.sheets[i].data[0].rowData[j].values[9].userEnteredFormat.backgroundColor;
+                            if(aa.red == 1) {
+                                makeup_attendance++;
+                            } 
+                            if(bb.red == 1) {
+                                makeup_attendance++;
+                            } 
+                            if(cc.red == 1) {
+                                makeup_attendance++;
+                            } 
+                            if(makeup_attendance > 0) {
+                                makeup_attendance--;
+                            }
+                            da.spring_attendance = makeup_attendance;
+                            da.grade = "s";
+                            // Get hours
+
+                            const requestB = {
+                                spreadsheetId: '19QqH3BVT9s96nFrOpxvInrleuupGCKfNDxTHiZmqIM0',
+                                ranges: [],
+                                includeGridData: true,
+                            };
+                            try {
+                                const responseB = (await sheets.spreadsheets.get(requestB)).data;
+                                let dataB = JSON.parse(JSON.stringify(responseB, null, 2))
+                                try {
+                                    let uid = id;
+                                    let hours = 0;
+                                    for (let k = 1; k < dataB.sheets[0].properties.gridProperties.rowCount; ++k) {
+                                        try {
+                                            let m = dataB.sheets[0].data[0].rowData[k].values[0].userEnteredValue.stringValue;
+                                            if(uid == m) {
+                                                let de = dataB.sheets[0].data[0].rowData[k].values[2].userEnteredValue.numberValue;
+                                                hours += de;
+                                            } 
+                                        } catch(e) {break;}
+                                    }
+                                    hours /= 60;
+                                    da.spring_hours = hours;
+                                } catch (e) {}
+                            } catch (err) {
+                            }
+                        }
                         return da;             
                     }
                 }
