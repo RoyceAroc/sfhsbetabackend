@@ -240,7 +240,6 @@ async function getHourStatus(id) {
                         da.fall_attendance = data.sheets[i].data[0].rowData[j].values[13].userEnteredValue.numberValue;
                         da.fall_status = data.sheets[i].data[0].rowData[j].values[14].userEnteredValue.numberValue;
 
-                        if(i==0) {
                             // Get Senior Hour Status;
                             let makeup_attendance = 0;
                             let aa = data.sheets[i].data[0].rowData[j].values[7].userEnteredFormat.backgroundColor;
@@ -287,7 +286,7 @@ async function getHourStatus(id) {
                                 } catch (e) {}
                             } catch (err) {
                             }
-                        }
+                        
                         return da;             
                     }
                 }
