@@ -277,7 +277,7 @@ async function getHourStatus(id) {
                                     for (let k = 1; k < dataB.sheets[0].properties.gridProperties.rowCount; ++k) {
                                         try {
                                             let m = dataB.sheets[0].data[0].rowData[k].values[0].userEnteredValue.stringValue;
-                                            if(uid == m) {
+                                            if(uid == m && dataB.sheets[0].data[0].rowData[k].values[4].userEnteredValue.stringValue == "approved") {
                                                 let de = dataB.sheets[0].data[0].rowData[k].values[2].userEnteredValue.numberValue;
                                                 hours += de;
                                             } 
