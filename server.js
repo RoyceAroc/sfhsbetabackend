@@ -258,7 +258,9 @@ async function getHourStatus(id) {
                                 makeup_attendance--;
                             }
                             da.spring_attendance = makeup_attendance;
+			    if(i==0) {
                             da.grade = "s";
+			    } 
                             // Get hours
 
                             const requestB = {
